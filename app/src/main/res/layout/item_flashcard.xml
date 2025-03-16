@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_marginBottom="12dp"
+    android:background="@android:color/white"
+    android:padding="12dp"
+    android:elevation="2dp">
+    <EditText
+        android:id="@+id/edtTerm"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Thuật ngữ"
+        android:textSize="16sp"
+        android:backgroundTint="#888"
+        android:padding="8dp" />
+
+    <EditText
+        android:id="@+id/edtDefinition"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Định nghĩa"
+        android:textSize="16sp"
+        android:backgroundTint="#888"
+        android:padding="8dp"
+        android:layout_marginTop="8dp" />
+
+</LinearLayout>

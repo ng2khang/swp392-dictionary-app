@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#F5F6FA"
+    android:padding="16dp"
+    tools:context=".activities.CreateSetActivity">
+
+    <!-- Tiêu đề: Tạo học phần -->
+    <TextView
+        android:id="@+id/textVieTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Tạo học phần"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:paddingBottom="12dp" />
+
+    <!-- Nhập tên học phần -->
+    <EditText
+        android:id="@+id/editTextSetTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Chủ đề, chương, đơn vị"
+        android:textSize="16sp"
+        android:backgroundTint="#666"
+        android:padding="10dp" />
+
+    <!-- Dòng nút mô tả/ quét tài liệu -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="8dp"/>
+
+    <!-- Flashcard list -->
+
+    <!-- Nút thêm flashcard -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:paddingTop="12dp">
+
+        <LinearLayout
+            android:id="@+id/flashcardContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+    </ScrollView>
+
+    <ImageButton
+        android:id="@+id/btnAddFlashcard"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@android:drawable/ic_input_add"
+        android:layout_gravity="center"
+        android:backgroundTint="#2196F3"
+        android:background="@android:drawable/btn_default"
+        android:contentDescription="Thêm flashcard"
+        app:tint="#FFFFFF" />
+
+    <!-- Nút lưu -->
+    <Button
+        android:id="@+id/btnSaveSet"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="✔ Lưu học phần"
+        android:layout_marginTop="8dp"
+        android:backgroundTint="#4CAF50"
+        android:textColor="#FFF" />
+</LinearLayout>
