@@ -31,8 +31,8 @@ public class QuizActivity extends AppCompatActivity {
         tabLayout = findViewById(R.id.tab_layout);
 
         adapter = new ViewPagerAdapter(getSupportFragmentManager(), getLifecycle());
-//        adapter.addFragment(new QuizListFragment());
-//        adapter.addFragment(new QuizCreateFragment());
+        adapter.addFragment(new QuizListFragment());
+        adapter.addFragment(new QuizCreateFragment());
 //        adapter.addFragment(new TakeQuizFragment());
 //        adapter.addFragment(new QuizHistoryFragment());
 

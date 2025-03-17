@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="8dp">
+
+    <EditText
+        android:id="@+id/et_question_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter question"
+        android:enabled="false"
+        android:textSize="16sp" />
+
+    <RadioGroup
+        android:id="@+id/rg_answers"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="8dp">
+
+        <RadioButton
+            android:id="@+id/rb_answer1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Answer1"
+            android:enabled="false"
+            android:textSize="14sp"/>
+
+        <RadioButton
+            android:id="@+id/rb_answer2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Answer2"
+            android:enabled="false"
+            android:textSize="14sp"/>
+
+        <RadioButton
+            android:id="@+id/rb_answer3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Answer3"
+            android:enabled="false"
+            android:textSize="14sp"/>
+
+        <RadioButton
+            android:id="@+id/rb_answer4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Answer4"
+            android:enabled="false"
+            android:textSize="14sp"/>
+    </RadioGroup>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="8dp">
+
+        <Button
+            android:id="@+id/btn_edit_question"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="Save Change" />
+
+        <Button
+            android:id="@+id/btn_delete_question"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="Remove" />
+    </LinearLayout>
+</LinearLayout>

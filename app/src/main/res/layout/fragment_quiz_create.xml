@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.QuizCreateFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <Button
+                android:id="@+id/btn_choose_vocab"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Choose Vocab" />
+
+            <TextView
+                android:id="@+id/tv_selected_vocab"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="No vocab selected"
+                android:paddingTop="16dp"
+                android:visibility="gone" />
+
+            <LinearLayout
+                android:id="@+id/layout_quiz_details"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone"
+                android:paddingTop="16dp">
+
+                <EditText
+                    android:id="@+id/et_quiz_set_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Quiz Title" />
+
+                <EditText
+                    android:id="@+id/et_quiz_set_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Description (optional)"
+                    android:inputType="textMultiLine"
+                    android:lines="3"
+                    android:gravity="top" />
+
+                <EditText
+                    android:id="@+id/et_total_questions"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Total question"
+                    android:inputType="number" />
+
+                <EditText
+                    android:id="@+id/et_quiz_time"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Time (minutes)"
+                    android:inputType="number" />
+
+                <Button
+                    android:id="@+id/btn_create_quiz_set"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Create Quiz"
+                    android:layout_marginTop="24dp"/>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+</FrameLayout>
