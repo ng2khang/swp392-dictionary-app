@@ -13,7 +13,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Danh sách học phần"
+        android:text="List Flashcard Set"
         android:textSize="20sp"
         android:textStyle="bold"
         android:gravity="center"
@@ -31,7 +31,7 @@
         android:id="@+id/btnAddNewSet"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="+ Thêm học phần"
+        android:text="+ Add Flashcard Set"
         android:layout_marginTop="12dp" />
 
 </LinearLayout>

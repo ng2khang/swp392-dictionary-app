@@ -15,7 +15,7 @@
         android:id="@+id/textVieTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Tạo học phần"
+        android:text="Add New Flashcard Set"
         android:textSize="20sp"
         android:textStyle="bold"
         android:gravity="center"
@@ -26,7 +26,7 @@
         android:id="@+id/editTextSetTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Chủ đề, chương, đơn vị"
+        android:hint="Set Name"
         android:textSize="16sp"
         android:backgroundTint="#666"
         android:padding="10dp" />
@@ -70,7 +70,7 @@
         android:id="@+id/btnSaveSet"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="✔ Lưu học phần"
+        android:text="✔ Save"
         android:layout_marginTop="8dp"
         android:backgroundTint="#4CAF50"
         android:textColor="#FFF" />

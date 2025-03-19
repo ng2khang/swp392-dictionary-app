@@ -43,7 +43,6 @@ public class FlashCardActivity extends AppCompatActivity {
 
         if (setId != -1) {
             flashcards = dbHelper.getFlashcardsBySetId(setId);
-            Toast.makeText(getApplicationContext(), "Hello " + flashcards.size(), Toast.LENGTH_SHORT).show();
             adapter = new FlashcardAdapter(this, flashcards);
             viewPager.setAdapter(adapter);
             updateProgress(0);

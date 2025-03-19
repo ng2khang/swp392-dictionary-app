@@ -74,7 +74,7 @@ public class EditFlashcardActivity extends AppCompatActivity {
     private void saveChanges() {
         String newTitle = editSetTitle.getText().toString().trim();
         if (newTitle.isEmpty()) {
-            Toast.makeText(this, "Vui lòng nhập tên học phần", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Please enter the Flashcard Set name", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -91,7 +91,7 @@ public class EditFlashcardActivity extends AppCompatActivity {
         }
 
         dbHelper.updateSet(setId, newTitle, updatedFlashcards);
-        Toast.makeText(this, "Đã cập nhật học phần", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Flashcard set edited", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(EditFlashcardActivity.this, ListSetActivity.class);
         startActivity(intent);
         finish();

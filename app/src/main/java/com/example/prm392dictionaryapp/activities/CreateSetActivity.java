@@ -57,7 +57,7 @@ public class CreateSetActivity extends AppCompatActivity {
     private void saveSet() {
         String title = editTextSetTitle.getText().toString().trim();
         if (title.isEmpty()) {
-            Toast.makeText(this, "Vui lòng nhập tên học phần", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Please enter the Flashcard Set name", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -76,18 +76,18 @@ public class CreateSetActivity extends AppCompatActivity {
         }
 
         if (flashcards.isEmpty()) {
-            Toast.makeText(this, "Thêm ít nhất 1 flashcard", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Add at least one flashcard.", Toast.LENGTH_SHORT).show();
             return;
         }
 
         long id = dbHelper.insertSet(title, flashcards);
         if (id > 0) {
-            Toast.makeText(this, "Đã lưu học phần", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Flashcard set saved.", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(CreateSetActivity.this, ListSetActivity.class);
             startActivity(intent);
             finish();
         } else {
-            Toast.makeText(this, "Lỗi lưu dữ liệu", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Data error!", Toast.LENGTH_SHORT).show();
         }
     }
 }

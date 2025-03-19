@@ -11,7 +11,7 @@
         android:id="@+id/edtTerm"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Thuật ngữ"
+        android:hint="Term"
         android:textSize="16sp"
         android:backgroundTint="#888"
         android:padding="8dp" />
@@ -20,7 +20,7 @@
         android:id="@+id/edtDefinition"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Định nghĩa"
+        android:hint="Definition"
         android:textSize="16sp"
         android:backgroundTint="#888"
         android:padding="8dp"
