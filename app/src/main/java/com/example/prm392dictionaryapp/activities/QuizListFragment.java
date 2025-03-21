@@ -92,7 +92,7 @@ public class QuizListFragment extends Fragment {
             db = quizHelper.getReadableDatabase();
 
             String[] columns = {"id", "title", "description", "totalQuestion", "quizTime", "createdAt"};
-            cursor = db.query(MyHelper.TABLE_QUIZ_SET, null, null, null, null, null, "createdAt DESC");
+            cursor = db.query(MyHelper.TABLE_QUIZ_SET, columns, null, null, null, null, "createdAt DESC");
             if (cursor != null) {
                 if (cursor.moveToFirst()) {
                     do {
@@ -110,7 +110,7 @@ public class QuizListFragment extends Fragment {
                             e.printStackTrace();
                         }
 
-                        QuizSet quiz = new QuizSet(id, title, description, totalQuestion, time, createdAt);
+                        QuizSet quiz = QuizSet.builder().id(id).title(title).description(description).totalQuestion(totalQuestion).quizTime(time).createdAt(createdAt).build();
                         quizList.add(quiz);
                     } while (cursor.moveToNext());
                 }

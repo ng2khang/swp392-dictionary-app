@@ -39,29 +39,9 @@ public class QuizQuestionAdapter extends RecyclerView.Adapter<QuizQuestionAdapte
     @Override
     public void onBindViewHolder(@NonNull QuestionViewHolder holder, int position) {
         QuizQuestion question = questionList.get(position);
-        // Gán dữ liệu câu hỏi và đáp án cho các view
         holder.etQuestion.setText(question.getQuestion());
-        // Giả sử question có 4 đáp án và đáp án đúng được lưu trong thuộc tính nào đó
-        // Ví dụ:
-        // holder.rbAnswer1.setText(question.getAnswer1());
-        // ...
-        // Chọn đáp án đúng trong RadioGroup
-        // Cũng dựa vào isEditing, bạn có thể enable/disable các EditText và RadioButton
-        holder.etQuestion.setEnabled(isEditing);
-        holder.rbAnswer1.setEnabled(isEditing);
-        holder.rbAnswer2.setEnabled(isEditing);
-        holder.rbAnswer3.setEnabled(isEditing);
-        holder.rbAnswer4.setEnabled(isEditing);
 
-        // Sự kiện Edit & Delete của từng câu
-        holder.btnEdit.setOnClickListener(v -> {
-            // Mở dialog hoặc chuyển item sang chế độ edit riêng
-        });
-        holder.btnDelete.setOnClickListener(v -> {
-            // Xác nhận và xóa câu hỏi khỏi danh sách
-            questionList.remove(position);
-            notifyItemRemoved(position);
-        });
+
     }
 
     @Override
@@ -70,19 +50,13 @@ public class QuizQuestionAdapter extends RecyclerView.Adapter<QuizQuestionAdapte
     }
 
     public static class QuestionViewHolder extends RecyclerView.ViewHolder {
-        EditText etQuestion;
-        RadioGroup rgAnswers;
-        RadioButton rbAnswer1, rbAnswer2, rbAnswer3, rbAnswer4;
+        EditText etQuestion, etAnswer;
         Button btnEdit, btnDelete;
 
         public QuestionViewHolder(@NonNull View itemView) {
             super(itemView);
             etQuestion = itemView.findViewById(R.id.et_question_text);
-            rgAnswers = itemView.findViewById(R.id.rg_answers);
-            rbAnswer1 = itemView.findViewById(R.id.rb_answer1);
-            rbAnswer2 = itemView.findViewById(R.id.rb_answer2);
-            rbAnswer3 = itemView.findViewById(R.id.rb_answer3);
-            rbAnswer4 = itemView.findViewById(R.id.rb_answer4);
+            etAnswer = itemView.findViewById(R.id.et_answer_text);
             btnEdit = itemView.findViewById(R.id.btn_edit_question);
             btnDelete = itemView.findViewById(R.id.btn_delete_question);
         }

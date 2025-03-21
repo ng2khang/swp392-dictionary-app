@@ -12,47 +12,18 @@
         android:layout_height="wrap_content"
         android:hint="Enter question"
         android:enabled="false"
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        android:focusableInTouchMode="false"/>
 
-    <RadioGroup
-        android:id="@+id/rg_answers"
+    <EditText
+        android:id="@+id/et_answer_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginTop="8dp">
-
-        <RadioButton
-            android:id="@+id/rb_answer1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Answer1"
-            android:enabled="false"
-            android:textSize="14sp"/>
-
-        <RadioButton
-            android:id="@+id/rb_answer2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Answer2"
-            android:enabled="false"
-            android:textSize="14sp"/>
-
-        <RadioButton
-            android:id="@+id/rb_answer3"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Answer3"
-            android:enabled="false"
-            android:textSize="14sp"/>
-
-        <RadioButton
-            android:id="@+id/rb_answer4"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Answer4"
-            android:enabled="false"
-            android:textSize="14sp"/>
-    </RadioGroup>
+        android:hint="Enter answer"
+        android:enabled="false"
+        android:textSize="16sp"
+        android:focusableInTouchMode="false">
+    </EditText>
 
     <LinearLayout
         android:layout_width="match_parent"

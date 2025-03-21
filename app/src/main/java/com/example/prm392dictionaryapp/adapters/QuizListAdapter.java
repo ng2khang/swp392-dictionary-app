@@ -43,7 +43,7 @@ public class QuizListAdapter extends RecyclerView.Adapter<QuizListAdapter.QuizVi
         QuizSet quiz = quizList.get(position);
         holder.tvTitle.setText(quiz.getTitle());
         holder.tvDescription.setText(quiz.getDescription());
-        holder.tvTotalQuestionAndTime.setText(quiz.getTotalQuestion() + "c/" + quiz.getQuizTime() + "p");
+        holder.tvTotalQuestionAndTime.setText(quiz.getTotalQuestion() + "câu/" + quiz.getQuizTime() + "phút");
 
         String dateString = SDF.format(quiz.getCreatedAt());
         holder.tvCreatedAt.setText(dateString);

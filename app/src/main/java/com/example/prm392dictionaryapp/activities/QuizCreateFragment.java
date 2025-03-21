@@ -2,6 +2,7 @@ package com.example.prm392dictionaryapp.activities;
 
 import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
@@ -18,7 +19,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.prm392dictionaryapp.R;
+import com.example.prm392dictionaryapp.entities.Flashcard;
+import com.example.prm392dictionaryapp.entities.FlashcardSet;
+import com.example.prm392dictionaryapp.utils.DatabaseHelper;
 import com.example.prm392dictionaryapp.utils.MyHelper;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class QuizCreateFragment extends Fragment {
 
@@ -28,7 +35,10 @@ public class QuizCreateFragment extends Fragment {
     private EditText etQuizSetName, etQuizSetDescription, etTotalQuestions, etQuizTime;
     private Button btnCreateQuizSet;
     private MyHelper quizHelper;
+    private DatabaseHelper dbHelper;
+
     private String selectedVocabSet = null;
+    private int selectedSetFlashcardSetId = -1;
     View view;
 
     public QuizCreateFragment() {
@@ -56,13 +66,27 @@ public class QuizCreateFragment extends Fragment {
         return view;
     }
     private void showVocabSelectionDialog() {
-        String[] vocabSets = {"Vocabulary Set A", "Vocabulary Set B", "Vocabulary Set C"};
+        dbHelper = new DatabaseHelper(getActivity(), "flashcards.db", null, 1);
+
+        List<FlashcardSet> flashcardSetList = dbHelper.getAllSetsWithFlashcardCount();
+
+        if (flashcardSetList.isEmpty()) {
+            Toast.makeText(getActivity(), "No flashcard sets available", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String[] setTitles = new String[flashcardSetList.size()];
+        for (int i = 0; i < flashcardSetList.size(); i++) {
+            setTitles[i] = flashcardSetList.get(i).getTitle();
+        }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("Choose Vocab set");
-        builder.setItems(vocabSets, (dialog, which) -> {
-            selectedVocabSet = vocabSets[which];
-            tvSelectedVocab.setText("Vocab selected: " + selectedVocabSet);
+        builder.setTitle("Choose Flashcard Set");
+        builder.setItems(setTitles, (dialog, which) -> {
+            FlashcardSet selectedSet = flashcardSetList.get(which);
+            selectedVocabSet = selectedSet.getTitle();
+            selectedSetFlashcardSetId = selectedSet.getId();
+            tvSelectedVocab.setText("Flashcard Set selected: " + selectedSet.getTitle());
             tvSelectedVocab.setVisibility(View.VISIBLE);
             layoutQuizDetails.setVisibility(View.VISIBLE);
         });
@@ -108,7 +132,8 @@ public class QuizCreateFragment extends Fragment {
             Toast.makeText(getActivity(), "Create successfully", Toast.LENGTH_SHORT).show();
             QuizSetDetailFragment detailFragment = new QuizSetDetailFragment();
             Bundle bundle = new Bundle();
-            bundle.putLong("quizSetId", rowId);
+            bundle.putInt("quizSetId",Integer.parseInt(String.valueOf(rowId)));
+            bundle.putInt("flashcardSetId", selectedSetFlashcardSetId);
             detailFragment.setArguments(bundle);
 
             getParentFragmentManager().beginTransaction()
