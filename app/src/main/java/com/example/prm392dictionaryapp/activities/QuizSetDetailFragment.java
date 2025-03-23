@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -27,21 +28,19 @@ import com.example.prm392dictionaryapp.utils.DatabaseHelper;
 import com.example.prm392dictionaryapp.utils.MyHelper;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class QuizSetDetailFragment extends Fragment {
     private Toolbar toolbar;
-    private Button btnDoQuiz, btnDeleteQuizSet, btnEditQuizInfo, btnSaveChanges;
+    private Button btnDoQuiz, btnDeleteQuizSet, btnEditQuizInfo;
     private EditText etQuizSetName, etQuizSetDescription, etQuizSetTotalQuestion, etQuizSetTime;
-    private LinearLayout layoutQuizSetInfo;
     private RecyclerView rvQuestions;
     private QuizQuestionAdapter questionAdapter;
     private ArrayList<QuizQuestion> questionList;
     private boolean isEditing = false;
     private int quizSetId, flashcardSetId;
-
     private MyHelper quizHelper;
-    private DatabaseHelper dbHelper;
     View view;
 
     public QuizSetDetailFragment() {
@@ -58,26 +57,18 @@ public class QuizSetDetailFragment extends Fragment {
         toolbar = view.findViewById(R.id.toolbar_quiz_set_detail);
         btnDoQuiz = view.findViewById(R.id.btn_do_quiz);
         btnDeleteQuizSet = view.findViewById(R.id.btn_delete_quiz_set);
-        btnEditQuizInfo = view.findViewById(R.id.btn_edit_quiz_info);
-        btnSaveChanges = view.findViewById(R.id.btn_save_changes);
-
-        layoutQuizSetInfo = view.findViewById(R.id.layout_quiz_set_info);
         etQuizSetName = view.findViewById(R.id.et_quiz_set_name);
         etQuizSetDescription = view.findViewById(R.id.et_quiz_set_description);
         etQuizSetTotalQuestion = view.findViewById(R.id.et_quiz_set_total_question);
         etQuizSetTime = view.findViewById(R.id.et_quiz_set_time);
-
         rvQuestions = view.findViewById(R.id.rv_questions);
+        btnEditQuizInfo = view.findViewById(R.id.btn_edit_quiz_info);
         rvQuestions.setLayoutManager(new LinearLayoutManager(getActivity()));
-        questionList = new ArrayList<>();
-        questionAdapter = new QuizQuestionAdapter(questionList);
-        rvQuestions.setAdapter(questionAdapter);
-
         quizHelper = new MyHelper(getActivity(), "quiz_database.db", null, 1);
 
         if (getArguments() != null) {
-            quizSetId = getArguments().getInt("quizSetId");
-            flashcardSetId = getArguments().getInt("flashcardSetId");
+            quizSetId = (int) getArguments().getLong("quizSetId", -1);
+            flashcardSetId = getArguments().getInt("flashcardSetId", -1);
             loadQuizSetDetail();
             loadQuizQuestions();
         }
@@ -97,59 +88,146 @@ public class QuizSetDetailFragment extends Fragment {
 
         btnDeleteQuizSet.setOnClickListener(v -> deleteQuizSet());
         btnDoQuiz.setOnClickListener(v -> startQuiz());
-        btnSaveChanges.setOnClickListener(v -> saveChanges());
         return view;
     }
     private void loadQuizSetDetail() {
+        SQLiteDatabase db = quizHelper.getReadableDatabase();
+        Cursor cursor = null;
         try {
-            SQLiteDatabase db = quizHelper.getReadableDatabase();
-            Cursor cursor = db.query(MyHelper.TABLE_QUIZ_SET, null, "id = ?", new String[]{String.valueOf(quizSetId)}, null, null, null);
-            if (cursor != null && cursor.moveToFirst()) {
+            String[] columns = {"title", "description", "totalQuestion", "quizTime"};
+            cursor = db.query(MyHelper.TABLE_QUIZ_SET, columns, "id = ?",
+                    new String[]{String.valueOf(quizSetId)}, null, null, null);
+            if (cursor != null && cursor.moveToFirst()){
                 String title = cursor.getString(cursor.getColumnIndexOrThrow("title"));
                 String description = cursor.getString(cursor.getColumnIndexOrThrow("description"));
                 int totalQuestion = cursor.getInt(cursor.getColumnIndexOrThrow("totalQuestion"));
                 int quizTime = cursor.getInt(cursor.getColumnIndexOrThrow("quizTime"));
+
                 etQuizSetName.setText(title);
                 etQuizSetDescription.setText(description);
                 etQuizSetTotalQuestion.setText("Total question: " + totalQuestion);
-                etQuizSetTime.setText("Time: " + quizTime + "minutes");
+                etQuizSetTime.setText("Time: " + quizTime + " phút");
+            }
+        } catch(Exception e) {
+            e.printStackTrace();
+            Toast.makeText(getActivity(), "Error loading quiz set detail: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        } finally {
+            if(cursor != null) {
                 cursor.close();
             }
             db.close();
-        } catch (Exception e) {
-            Toast.makeText(getActivity(), "Error loading quiz set: " + e.getMessage(), Toast.LENGTH_LONG).show();
-            e.printStackTrace();
         }
     }
 
 
     private void loadQuizQuestions() {
-        questionList.clear();
-        dbHelper = new DatabaseHelper(getActivity(), "flashcards.db", null, 1);
-        List<Flashcard> flashcardList = dbHelper.getFlashcardsBySetId(flashcardSetId);
+        questionList = new ArrayList<>();
         SQLiteDatabase db = quizHelper.getReadableDatabase();
-        Cursor cursor = db.query(MyHelper.TABLE_QUIZ_QUESTION, null, "quizSetId = ?", new String[]{String.valueOf(quizSetId)}, null, null, null);
-        if (cursor != null && cursor.moveToFirst()) {
-            do {
-                int qId = cursor.getInt(cursor.getColumnIndexOrThrow("id"));
-                String questionText = cursor.getString(cursor.getColumnIndexOrThrow("question"));
-                String answerText = cursor.getString(cursor.getColumnIndexOrThrow("answer"));
-                QuizQuestion question = QuizQuestion.builder().id(qId).question(questionText).answer(answerText).build();
-                questionList.add(question);
-            } while (cursor.moveToNext());
-            cursor.close();
+        Cursor cursor = null;
+        try {
+            String[] columns = {"id", "question", "answer", "addedAt", "quizSetId"};
+            cursor = db.query(MyHelper.TABLE_QUIZ_QUESTION, columns, "quizSetId = ?",
+                    new String[]{String.valueOf(quizSetId)}, null, null, "addedAt DESC");
+            if (cursor != null && cursor.moveToFirst()){
+                do {
+                    int id = cursor.getInt(cursor.getColumnIndexOrThrow("id"));
+                    String questionText = cursor.getString(cursor.getColumnIndexOrThrow("question"));
+                    String answerText = cursor.getString(cursor.getColumnIndexOrThrow("answer"));
+                    QuizQuestion question = new QuizQuestion();
+                    question.setId(id);
+                    question.setQuestion(questionText);
+                    question.setAnswer(answerText);
+                    questionList.add(question);
+                } while (cursor.moveToNext());
+            }
+        } catch(Exception e) {
+            e.printStackTrace();
+            Toast.makeText(getActivity(), "Error loading quiz questions: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        } finally {
+            if(cursor != null) {
+                cursor.close();
+            }
+            db.close();
         }
-        db.close();
-        questionAdapter.notifyDataSetChanged();
+        questionAdapter = new QuizQuestionAdapter(questionList);
+        questionAdapter.setOnQuestionActionListener(new QuizQuestionAdapter.OnQuestionActionListener() {
+            @Override
+            public void onEditQuestion(QuizQuestion question, int position) {
+                showEditQuestionDialog(question, position);
+            }
+
+            @Override
+            public void onDeleteQuestion(QuizQuestion question, int position) {
+                deleteQuizQuestion(question.getId(), position);
+            }
+        });
+        rvQuestions.setAdapter(questionAdapter);
     }
 
-    private void deleteQuizSet() {
+    private void showEditQuestionDialog(QuizQuestion question, int position) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Edit Question");
 
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_edit_question, null);
+        EditText etEditQuestion = dialogView.findViewById(R.id.et_edit_question);
+        EditText etEditAnswer = dialogView.findViewById(R.id.et_edit_answer);
+
+        etEditQuestion.setText(question.getQuestion());
+        etEditAnswer.setText(question.getAnswer());
+
+        builder.setView(dialogView);
+        builder.setPositiveButton("Save", (dialog, which) -> {
+            String newQuestion = etEditQuestion.getText().toString().trim();
+            String newAnswer = etEditAnswer.getText().toString().trim();
+            if (!newQuestion.isEmpty() && !newAnswer.isEmpty()) {
+                updateQuizQuestion(question.getId(), newQuestion, newAnswer, position);
+            } else {
+                Toast.makeText(getActivity(), "Please fill in both fields", Toast.LENGTH_SHORT).show();
+            }
+        });
+        builder.setNegativeButton("Cancel", null);
+        builder.show();
+    }
+
+    private void updateQuizQuestion(int questionId, String newQuestion, String newAnswer, int position) {
+        SQLiteDatabase db = quizHelper.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put("question", newQuestion);
+        cv.put("answer", newAnswer);
+        int updated = db.update(MyHelper.TABLE_QUIZ_QUESTION, cv, "id = ?", new String[]{String.valueOf(questionId)});
+        db.close();
+        if (updated > 0) {
+            QuizQuestion q = questionList.get(position);
+            q.setQuestion(newQuestion);
+            q.setAnswer(newAnswer);
+            questionAdapter.notifyItemChanged(position);
+            Toast.makeText(getActivity(), "Question updated", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(getActivity(), "Update failed", Toast.LENGTH_SHORT).show();
+        }
+    }
+    private void deleteQuizQuestion(int questionId, int position) {
+        SQLiteDatabase db = quizHelper.getWritableDatabase();
+        int deleted = db.delete(MyHelper.TABLE_QUIZ_QUESTION, "id = ?", new String[]{String.valueOf(questionId)});
+        db.close();
+        if (deleted > 0) {
+            questionList.remove(position);
+            questionAdapter.notifyItemRemoved(position);
+            Toast.makeText(getActivity(), "Question deleted", Toast.LENGTH_SHORT).show();
+            updateTotalQuestionUI();
+        } else {
+            Toast.makeText(getActivity(), "Failed to delete question", Toast.LENGTH_SHORT).show();
+        }
+    }
+    private void deleteQuizSet() {
         SQLiteDatabase db = quizHelper.getWritableDatabase();
         int deleted = db.delete(MyHelper.TABLE_QUIZ_SET, "id = ?", new String[]{String.valueOf(quizSetId)});
         db.close();
         if (deleted > 0) {
             Toast.makeText(getActivity(), "Quiz Set Removed", Toast.LENGTH_SHORT).show();
+            Bundle result = new Bundle();
+            result.putBoolean("reload", true);
+            getParentFragmentManager().setFragmentResult("refreshQuizList", result);
             getParentFragmentManager().popBackStack();
         } else {
             Toast.makeText(getActivity(), "Error while remove", Toast.LENGTH_SHORT).show();
@@ -161,37 +239,26 @@ public class QuizSetDetailFragment extends Fragment {
         Toast.makeText(getActivity(), "Do this quiz...", Toast.LENGTH_SHORT).show();
     }
 
-    private void saveChanges() {
-        //do code here
-        Toast.makeText(getActivity(), "Changes saved", Toast.LENGTH_SHORT).show();
-        isEditing = false;
-        btnEditQuizInfo.setText("Edit detail");
-        questionAdapter.setEditing(false);
-    }
     private void setQuizInfoEditable(boolean editable) {
         etQuizSetName.setEnabled(editable);
         etQuizSetDescription.setEnabled(editable);
-        etQuizSetTotalQuestion.setEnabled(editable);
         etQuizSetTime.setEnabled(editable);
     }
     private void updateQuizSetInfo() {
         String updatedName = etQuizSetName.getText().toString().trim();
         String updatedDescription = etQuizSetDescription.getText().toString().trim();
 
-        // Giả sử ta extract số từ chuỗi "Total question: ?"
-        String totalQuestionText = etQuizSetTotalQuestion.getText().toString().replaceAll("[^0-9]", "");
         String quizTimeText = etQuizSetTime.getText().toString().replaceAll("[^0-9]", "");
 
-        int updatedTotalQuestion = totalQuestionText.isEmpty() ? 0 : Integer.parseInt(totalQuestionText);
         int updatedQuizTime = quizTimeText.isEmpty() ? 0 : Integer.parseInt(quizTimeText);
 
         ContentValues cv = new ContentValues();
         cv.put("title", updatedName);
         cv.put("description", updatedDescription);
-        cv.put("totalQuestion", updatedTotalQuestion);
         cv.put("quizTime", updatedQuizTime);
 
-        try (SQLiteDatabase db = quizHelper.getWritableDatabase()) {
+        SQLiteDatabase db = quizHelper.getWritableDatabase();
+        try {
             int rows = db.update(MyHelper.TABLE_QUIZ_SET, cv, "id = ?", new String[]{String.valueOf(quizSetId)});
             if (rows > 0) {
                 Toast.makeText(getActivity(), "Quiz set updated", Toast.LENGTH_SHORT).show();
@@ -201,6 +268,38 @@ public class QuizSetDetailFragment extends Fragment {
         } catch (Exception e) {
             Toast.makeText(getActivity(), "Error updating quiz set: " + e.getMessage(), Toast.LENGTH_LONG).show();
             e.printStackTrace();
+        } finally {
+            db.close();
         }
     }
+
+    private void updateTotalQuestionUI() {
+        int count = 0;
+        SQLiteDatabase db = quizHelper.getReadableDatabase();
+        Cursor cursor = null;
+        try {
+            String query = "SELECT COUNT(*) FROM " + MyHelper.TABLE_QUIZ_QUESTION + " WHERE quizSetId = ?";
+            cursor = db.rawQuery(query, new String[]{String.valueOf(quizSetId)});
+            if (cursor != null && cursor.moveToFirst()) {
+                count = cursor.getInt(0);
+            }
+            updateTotalQuestionInDB(count);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+            db.close();
+        }
+        etQuizSetTotalQuestion.setText("Total question: " + count);
+    }
+    private void updateTotalQuestionInDB(int newTotal) {
+        SQLiteDatabase db = quizHelper.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put("totalQuestion", newTotal);
+        db.update(MyHelper.TABLE_QUIZ_SET, cv, "id = ?", new String[]{String.valueOf(quizSetId)});
+        db.close();
+    }
+
 }

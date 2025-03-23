@@ -4,7 +4,11 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentResultListener;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -37,6 +41,20 @@ public class QuizListFragment extends Fragment {
         // Required empty public constructor
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        getParentFragmentManager().setFragmentResultListener("refreshQuizList", this, new FragmentResultListener() {
+            @Override
+            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
+                boolean reload = result.getBoolean("reload", false);
+                if (reload) {
+                    quizList.clear();
+                    loadQuizList();
+                }
+            }
+        });
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -91,7 +109,7 @@ public class QuizListFragment extends Fragment {
         try {
             db = quizHelper.getReadableDatabase();
 
-            String[] columns = {"id", "title", "description", "totalQuestion", "quizTime", "createdAt"};
+            String[] columns = {"id", "title", "description", "totalQuestion", "quizTime", "createdAt", "flashcardSetId"};
             cursor = db.query(MyHelper.TABLE_QUIZ_SET, columns, null, null, null, null, "createdAt DESC");
             if (cursor != null) {
                 if (cursor.moveToFirst()) {

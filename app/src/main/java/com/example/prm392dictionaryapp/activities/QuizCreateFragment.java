@@ -1,6 +1,7 @@
 package com.example.prm392dictionaryapp.activities;
 
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -24,23 +25,24 @@ import com.example.prm392dictionaryapp.entities.FlashcardSet;
 import com.example.prm392dictionaryapp.utils.DatabaseHelper;
 import com.example.prm392dictionaryapp.utils.MyHelper;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class QuizCreateFragment extends Fragment {
 
-    private Button btnChooseVocab;
     private TextView tvSelectedVocab;
     private LinearLayout layoutQuizDetails;
     private EditText etQuizSetName, etQuizSetDescription, etTotalQuestions, etQuizTime;
-    private Button btnCreateQuizSet;
     private MyHelper quizHelper;
-    private DatabaseHelper dbHelper;
-
-    private String selectedVocabSet = null;
-    private int selectedSetFlashcardSetId = -1;
-    View view;
-
+    private List<FlashcardSet> flashcardSetList;
+    private FlashcardSet selectedFlashcardSet;
+    private Button btnChooseVocab, btnCreateQuizSet;
+    private View view;
+    private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
     public QuizCreateFragment() {
         // Required empty public constructor
     }
@@ -59,81 +61,123 @@ public class QuizCreateFragment extends Fragment {
         btnCreateQuizSet = view.findViewById(R.id.btn_create_quiz_set);
 
         quizHelper = new MyHelper(getActivity(), "quiz_database.db", null, 1);
-
-        btnChooseVocab.setOnClickListener(v -> showVocabSelectionDialog());
+        loadFlashcardSets();
+        btnChooseVocab.setOnClickListener(v -> showFlashcardSetDialog());
         btnCreateQuizSet.setOnClickListener(v -> createQuizSet());
 
         return view;
     }
-    private void showVocabSelectionDialog() {
-        dbHelper = new DatabaseHelper(getActivity(), "flashcards.db", null, 1);
+    private void loadFlashcardSets() {
+        flashcardSetList = new ArrayList<>();
+        SQLiteDatabase db = quizHelper.getReadableDatabase();
+        Cursor cursor = null;
 
-        List<FlashcardSet> flashcardSetList = dbHelper.getAllSetsWithFlashcardCount();
+        try {
+            String[] columns = {"id", "title"};
+            cursor = db.query(MyHelper.TABLE_FLASHCARD_SET, columns, null, null, null, null, null);
+            if (cursor != null && cursor.moveToFirst()) {
+                do {
+                    int id = cursor.getInt(cursor.getColumnIndexOrThrow("id"));
+                    String title = cursor.getString(cursor.getColumnIndexOrThrow("title"));
+                    int flashcardCount = getFlashcardCount(id);
 
-        if (flashcardSetList.isEmpty()) {
+                    FlashcardSet fs = new FlashcardSet();
+                    fs.setId(id);
+                    fs.setTitle(title);
+                    fs.setFlashcardCount(flashcardCount);
+                    flashcardSetList.add(fs);
+                } while (cursor.moveToNext());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if(cursor != null) {
+                cursor.close();
+            }
+            db.close();
+        }
+    }
+
+    private int getFlashcardCount(int flashcardSetId) {
+        int count = 0;
+        SQLiteDatabase db = quizHelper.getReadableDatabase();
+        Cursor cursor = null;
+        try {
+            String query = "SELECT COUNT(*) FROM " + MyHelper.TABLE_FLASHCARD + " WHERE flashcardSetId = ?";
+            cursor = db.rawQuery(query, new String[]{String.valueOf(flashcardSetId)});
+            if (cursor != null && cursor.moveToFirst()) {
+                count = cursor.getInt(0);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if(cursor != null) {
+                cursor.close();
+            }
+            db.close();
+        }
+        return count;
+    }
+    private void showFlashcardSetDialog() {
+        if (flashcardSetList == null || flashcardSetList.isEmpty()) {
             Toast.makeText(getActivity(), "No flashcard sets available", Toast.LENGTH_SHORT).show();
             return;
         }
-
-        String[] setTitles = new String[flashcardSetList.size()];
-        for (int i = 0; i < flashcardSetList.size(); i++) {
-            setTitles[i] = flashcardSetList.get(i).getTitle();
+        List<String> titles = new ArrayList<>();
+        for (FlashcardSet fs : flashcardSetList) {
+            titles.add(fs.getTitle());
         }
-
+        String[] items = titles.toArray(new String[0]);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("Choose Flashcard Set");
-        builder.setItems(setTitles, (dialog, which) -> {
-            FlashcardSet selectedSet = flashcardSetList.get(which);
-            selectedVocabSet = selectedSet.getTitle();
-            selectedSetFlashcardSetId = selectedSet.getId();
-            tvSelectedVocab.setText("Flashcard Set selected: " + selectedSet.getTitle());
-            tvSelectedVocab.setVisibility(View.VISIBLE);
-            layoutQuizDetails.setVisibility(View.VISIBLE);
+        builder.setTitle("Select Flashcard Set");
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                selectedFlashcardSet = flashcardSetList.get(which);
+                tvSelectedVocab.setText("Selected: " + selectedFlashcardSet.getTitle());
+                tvSelectedVocab.setVisibility(View.VISIBLE);
+                layoutQuizDetails.setVisibility(View.VISIBLE);
+                etTotalQuestions.setHint("Total question (Max: " + selectedFlashcardSet.getFlashcardCount() + ")");
+            }
         });
         builder.show();
     }
-
     private void createQuizSet() {
-        if (selectedVocabSet == null) {
-            Toast.makeText(getActivity(), "Please select Vocab set first", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        String quizSetName = etQuizSetName.getText().toString().trim();
+        String title = etQuizSetName.getText().toString().trim();
         String description = etQuizSetDescription.getText().toString().trim();
         String totalQuestionsStr = etTotalQuestions.getText().toString().trim();
         String quizTimeStr = etQuizTime.getText().toString().trim();
 
-        if (quizSetName.isEmpty() || totalQuestionsStr.isEmpty() || quizTimeStr.isEmpty()) {
-            Toast.makeText(getActivity(), "Please enter full require information.", Toast.LENGTH_SHORT).show();
+        if (title.isEmpty() || totalQuestionsStr.isEmpty() || quizTimeStr.isEmpty() || selectedFlashcardSet == null) {
+            Toast.makeText(getActivity(), "Please complete all fields", Toast.LENGTH_SHORT).show();
             return;
         }
+        int totalQuestions = Integer.parseInt(totalQuestionsStr);
+        int quizTime = Integer.parseInt(quizTimeStr);
 
-        int totalQuestions, quizTime;
-        try {
-            totalQuestions = Integer.parseInt(totalQuestionsStr);
-            quizTime = Integer.parseInt(quizTimeStr);
-        } catch (NumberFormatException e) {
-            Toast.makeText(getActivity(), "Total of questions and time must be number", Toast.LENGTH_SHORT).show();
+        if (totalQuestions > selectedFlashcardSet.getFlashcardCount()) {
+            Toast.makeText(getActivity(), "Total questions cannot exceed flashcard count (" +
+                    selectedFlashcardSet.getFlashcardCount() + ")", Toast.LENGTH_SHORT).show();
             return;
         }
 
         SQLiteDatabase db = quizHelper.getWritableDatabase();
-        ContentValues cv = new ContentValues();
-        cv.put("title", quizSetName);
-        cv.put("description", selectedVocabSet + " - " + description);
-        cv.put("totalQuestion", totalQuestions);
-        cv.put("quizTime", quizTime);
-
-        long rowId = db.insert(MyHelper.TABLE_QUIZ_SET, null, cv);
+        ContentValues values = new ContentValues();
+        values.put("title", title);
+        values.put("description", description);
+        values.put("totalQuestion", totalQuestions);
+        values.put("quizTime", quizTime);
+        values.put("flashcardSetId", selectedFlashcardSet.getId());
+        long quizSetId = db.insert(MyHelper.TABLE_QUIZ_SET, null, values);
         db.close();
 
-        if (rowId != -1) {
+        if (quizSetId != -1) {
+            insertQuizQuestions(quizSetId, totalQuestions, selectedFlashcardSet.getId());
             Toast.makeText(getActivity(), "Create successfully", Toast.LENGTH_SHORT).show();
             QuizSetDetailFragment detailFragment = new QuizSetDetailFragment();
             Bundle bundle = new Bundle();
-            bundle.putInt("quizSetId",Integer.parseInt(String.valueOf(rowId)));
-            bundle.putInt("flashcardSetId", selectedSetFlashcardSetId);
+            bundle.putLong("quizSetId",quizSetId);
+            bundle.putInt("flashcardSetId", selectedFlashcardSet.getId());
             detailFragment.setArguments(bundle);
 
             getParentFragmentManager().beginTransaction()
@@ -141,7 +185,62 @@ public class QuizCreateFragment extends Fragment {
                     .addToBackStack(null)
                     .commit();
         } else {
-            Toast.makeText(getActivity(), "Error while create new quiz set", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Failed to create quiz set", Toast.LENGTH_SHORT).show();
         }
     }
+
+    private void insertQuizQuestions(long quizSetId, int totalQuestions, int flashcardSetId) {
+        List<Flashcard> flashcards = new ArrayList<>();
+        SQLiteDatabase db = quizHelper.getReadableDatabase();
+        Cursor cursor = null;
+        try {
+            String[] columns = {"id", "flashcardSetId", "term", "definition"};
+            cursor = db.query(MyHelper.TABLE_FLASHCARD, columns, "flashcardSetId = ?",
+                    new String[]{String.valueOf(flashcardSetId)}, null, null, null);
+            if (cursor != null && cursor.moveToFirst()) {
+                do {
+                    Flashcard fc = new Flashcard();
+                    fc.setId(cursor.getInt(cursor.getColumnIndexOrThrow("id")));
+                    fc.setFlashcardSetId(cursor.getInt(cursor.getColumnIndexOrThrow("flashcardSetId")));
+                    fc.setTerm(cursor.getString(cursor.getColumnIndexOrThrow("term")));
+                    fc.setDefinition(cursor.getString(cursor.getColumnIndexOrThrow("definition")));
+                    flashcards.add(fc);
+                } while (cursor.moveToNext());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if(cursor != null) {
+                cursor.close();
+            }
+            db.close();
+        }
+
+        if (flashcards.isEmpty()) {
+            Toast.makeText(getActivity(), "No flashcards found for the selected set", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Collections.shuffle(flashcards);
+
+        List<Flashcard> selectedFlashcards = flashcards.subList(0, Math.min(totalQuestions, flashcards.size()));
+
+        SQLiteDatabase writeDb = quizHelper.getWritableDatabase();
+        try {
+            for (Flashcard fc : selectedFlashcards) {
+                ContentValues cv = new ContentValues();
+                //question = definition và answer = term
+                cv.put("question", fc.getDefinition());
+                cv.put("answer", fc.getTerm());
+                cv.put("addedAt", sdf.format(new Date()));
+                cv.put("quizSetId", quizSetId);
+                writeDb.insert(MyHelper.TABLE_QUIZ_QUESTION, null, cv);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            writeDb.close();
+        }
+    }
+
 }
