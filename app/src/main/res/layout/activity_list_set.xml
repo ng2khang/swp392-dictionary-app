@@ -32,6 +32,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="+ Add Flashcard Set"
+        android:backgroundTint="#4CAF50"
+        android:textColor="#FFF"
         android:layout_marginTop="12dp" />
 
 </LinearLayout>

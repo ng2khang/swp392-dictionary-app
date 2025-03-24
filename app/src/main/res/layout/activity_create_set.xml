@@ -60,7 +60,7 @@
         android:layout_height="wrap_content"
         android:src="@android:drawable/ic_input_add"
         android:layout_gravity="center"
-        android:backgroundTint="#2196F3"
+        android:backgroundTint="#4CAF50"
         android:background="@android:drawable/btn_default"
         android:contentDescription="Thêm flashcard"
         app:tint="#FFFFFF" />

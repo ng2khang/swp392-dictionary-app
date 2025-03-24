@@ -48,7 +48,7 @@ public class FlashCardSetAdapter extends RecyclerView.Adapter<FlashCardSetAdapte
     public void onBindViewHolder(@NonNull SetViewHolder holder, int position) {
         FlashcardSet s = setList.get(position);
         holder.textTitle.setText(s.getTitle());
-        holder.textCount.setText("Số thẻ: " + s.getFlashcardCount());
+        holder.textCount.setText("Number of card: " + s.getFlashcardCount());
 
         holder.itemView.setOnClickListener(v -> {
             if (listener != null) {

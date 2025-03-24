@@ -29,5 +29,13 @@ public class HomepageActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        Button btnFlashcard = findViewById(R.id.btnFlashcard);
+        btnFlashcard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(HomepageActivity.this, ListSetActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 }
