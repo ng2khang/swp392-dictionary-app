@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.QuizListFragment"
+    android:orientation="vertical">
+
+    <!-- TODO: Update blank fragment layout -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_quiz_list"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        tools:listitem="@layout/item_quiz"/>
+
+    <TextView
+        android:id="@+id/tv_no_quiz"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="No quizzes available"
+        android:textSize="16sp"
+        android:gravity="center"
+        android:visibility="gone"/>
+</LinearLayout>
