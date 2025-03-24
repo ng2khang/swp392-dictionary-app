@@ -11,6 +11,7 @@ import lombok.Data;
 public class QuizQuestion {
     private  int id;
     private String question;
+    private String answer;
     private Date addedAt;
     private int quizSetId;
 }

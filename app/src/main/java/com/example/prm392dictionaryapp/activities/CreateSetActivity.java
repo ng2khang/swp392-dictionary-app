@@ -27,7 +27,7 @@ public class CreateSetActivity extends AppCompatActivity {
     private EditText editTextSetTitle;
     private LinearLayout flashcardContainer;
     private Button btnSaveSet;
-    private ImageButton btnAddFlashcard;
+    private ImageButton btnAddFlashcard, btnBack;
     private DatabaseHelper dbHelper;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,12 +43,21 @@ public class CreateSetActivity extends AppCompatActivity {
         flashcardContainer = findViewById(R.id.flashcardContainer);
         btnSaveSet = findViewById(R.id.btnSaveSet);
         btnAddFlashcard = findViewById(R.id.btnAddFlashcard);
+        btnBack = findViewById(R.id.btnBackToList);
         dbHelper = new DatabaseHelper(getApplicationContext(), "flashcards.db", null, 1);
 
         btnAddFlashcard.setOnClickListener(v -> addFlashcardView());
         btnSaveSet.setOnClickListener(v -> saveSet());
         addFlashcardView();
         addFlashcardView();
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(CreateSetActivity.this, ListSetActivity.class);
+                startActivity(intent);
+            }
+        });
+
     }
     private void addFlashcardView() {
         View view = LayoutInflater.from(this).inflate(R.layout.item_flashcard, null);

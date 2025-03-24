@@ -12,6 +12,33 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.PRM392DictionaryApp"
         tools:targetApi="31">
+
+        <!-- Thêm HomepageActivity và đặt làm màn hình đầu tiên khi ứng dụng mở -->
+        <activity
+            android:name=".activities.HomepageActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- Các activity cũ vẫn giữ nguyên -->
+        <activity
+            android:name=".activities.DailyReportActivity"
+            android:exported="false"/>
+        <activity
+            android:name=".activities.ManageReportActivity"
+            android:exported="false"/>
+        <activity
+            android:name=".activities.RecommendForUsingReport"
+            android:exported="false"/>
+        <activity
+            android:name=".activities.ManageNoteActivity"
+            android:exported="false"/>
+        <activity
+            android:name=".activities.SettingActivity"
+            android:exported="false"/>
         <activity
             android:name=".activities.AddEditVocabActivity"
             android:exported="false" />
@@ -39,8 +66,9 @@
             android:name=".activities.FlashCardActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.MainVocabularyActivity"
+            android:name=".activities.QuizActivity"
             android:exported="true">
+            <!-- MainActivity vẫn giữ nguyên intent-filter như cũ -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

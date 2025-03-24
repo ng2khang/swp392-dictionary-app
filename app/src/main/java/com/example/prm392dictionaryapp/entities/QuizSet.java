@@ -15,4 +15,5 @@ public class QuizSet {
     private int totalQuestion;
     private int quizTime;
     private Date createdAt;
+    private int flashcardSetId;
 }
