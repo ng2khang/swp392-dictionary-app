@@ -50,9 +50,10 @@
             android:exported="false" />
         <activity
             android:name=".activities.VocabDetailActivity"
-            android:exported="false" /> <!-- <activity -->
-        <!-- android:name=".activities.MainVocabularyActivity" -->
-        <!-- android:exported="false" /> -->
+            android:exported="false" />
+        <activity
+            android:name=".activities.MainVocabularyActivity"
+            android:exported="false" />
         <activity
             android:name=".activities.EditFlashcardActivity"
             android:exported="false" />
