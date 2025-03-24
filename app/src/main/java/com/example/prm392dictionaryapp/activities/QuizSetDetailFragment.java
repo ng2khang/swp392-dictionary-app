@@ -235,8 +235,18 @@ public class QuizSetDetailFragment extends Fragment {
     }
 
     private void startQuiz() {
-        //logic làm quiz
-        Toast.makeText(getActivity(), "Do this quiz...", Toast.LENGTH_SHORT).show();
+        if (questionList == null || questionList.isEmpty()) {
+            Toast.makeText(getActivity(), "No questions available for this quiz", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        QuizTakingFragment quizTakingFragment = new QuizTakingFragment();
+        Bundle bundle = new Bundle();
+        bundle.putInt("quizSetId", quizSetId);
+        quizTakingFragment.setArguments(bundle);
+        getParentFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, quizTakingFragment)
+                .addToBackStack(null)
+                .commit();
     }
 
     private void setQuizInfoEditable(boolean editable) {

@@ -19,7 +19,6 @@ public class QuizActivity extends AppCompatActivity {
     private final int[] tabIcons = {
             R.drawable.ic_list,
             R.drawable.ic_create,
-            R.drawable.ic_quiz,
             R.drawable.ic_history
     };
 
@@ -34,8 +33,7 @@ public class QuizActivity extends AppCompatActivity {
         adapter = new ViewPagerAdapter(getSupportFragmentManager(), getLifecycle());
         adapter.addFragment(new QuizListFragment());
         adapter.addFragment(new QuizCreateFragment());
-//        adapter.addFragment(new TakeQuizFragment());
-//        adapter.addFragment(new QuizHistoryFragment());
+        adapter.addFragment(new QuizHistoryFragment());
 
         viewPager2.setAdapter(adapter);
         new TabLayoutMediator(tabLayout, viewPager2, (tab, position) -> {

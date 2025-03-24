@@ -14,4 +14,6 @@ public class QuizResult {
     private int score;
     private int isCompleted;
     private Date completedAt;
+
+    private QuizSet quizSet;
 }
