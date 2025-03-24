@@ -13,6 +13,20 @@
         android:theme="@style/Theme.PRM392DictionaryApp"
         tools:targetApi="31">
         <activity
+            android:name=".activities.AddEditVocabActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.TopicVocabularyActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.FavoVocabularyActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.VocabDetailActivity"
+            android:exported="false" /> <!-- <activity -->
+        <!-- android:name=".activities.MainVocabularyActivity" -->
+        <!-- android:exported="false" /> -->
+        <activity
             android:name=".activities.EditFlashcardActivity"
             android:exported="false" />
         <activity
@@ -25,7 +39,7 @@
             android:name=".activities.FlashCardActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.MainActivity"
+            android:name=".activities.MainVocabularyActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
