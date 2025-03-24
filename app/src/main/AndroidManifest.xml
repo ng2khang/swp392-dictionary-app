@@ -40,6 +40,21 @@
             android:name=".activities.SettingActivity"
             android:exported="false"/>
         <activity
+            android:name=".activities.AddEditVocabActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.TopicVocabularyActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.FavoVocabularyActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.VocabDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.MainVocabularyActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.EditFlashcardActivity"
             android:exported="false" />
         <activity
@@ -57,6 +72,7 @@
             <!-- MainActivity vẫn giữ nguyên intent-filter như cũ -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

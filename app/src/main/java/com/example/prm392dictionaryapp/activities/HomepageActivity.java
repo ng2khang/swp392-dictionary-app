@@ -37,5 +37,14 @@ public class HomepageActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        Button btnWord = findViewById(R.id.btnWord);
+        btnWord.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(HomepageActivity.this, MainVocabularyActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 }
