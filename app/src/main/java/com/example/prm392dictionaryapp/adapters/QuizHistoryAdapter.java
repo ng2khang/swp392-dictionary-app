@@ -17,7 +17,7 @@ import java.util.Locale;
 
 public class QuizHistoryAdapter extends RecyclerView.Adapter<QuizHistoryAdapter.QuizHistoryViewHolder> {
     private List<QuizResult> quizHistoryList;
-    private static final SimpleDateFormat SDF = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());
+    private static final SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
 
     public QuizHistoryAdapter(List<QuizResult> quizHistoryList) {
         this.quizHistoryList = quizHistoryList;

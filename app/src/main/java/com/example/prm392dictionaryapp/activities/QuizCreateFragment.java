@@ -2,7 +2,6 @@ package com.example.prm392dictionaryapp.activities;
 
 import android.content.ContentValues;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -24,7 +23,7 @@ import com.example.prm392dictionaryapp.entities.Flashcard;
 import com.example.prm392dictionaryapp.entities.FlashcardSet;
 import com.example.prm392dictionaryapp.utils.DatabaseHelper;
 
-import java.text.SimpleDateFormat;
+import android.icu.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -41,7 +40,7 @@ public class QuizCreateFragment extends Fragment {
     private FlashcardSet selectedFlashcardSet;
     private Button btnChooseVocab, btnCreateQuizSet;
     private View view;
-    private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+    private static final SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
     public QuizCreateFragment() {
         // Required empty public constructor
     }
@@ -148,7 +147,7 @@ public class QuizCreateFragment extends Fragment {
         String quizTimeStr = etQuizTime.getText().toString().trim();
 
         if (title.isEmpty() || totalQuestionsStr.isEmpty() || quizTimeStr.isEmpty() || selectedFlashcardSet == null) {
-            Toast.makeText(getActivity(), "Please complete all fields", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Please complete all require fields", Toast.LENGTH_SHORT).show();
             return;
         }
         int totalQuestions = Integer.parseInt(totalQuestionsStr);
@@ -231,7 +230,7 @@ public class QuizCreateFragment extends Fragment {
                 //question = definition và answer = term
                 cv.put("question", fc.getDefinition());
                 cv.put("answer", fc.getTerm());
-                cv.put("addedAt", sdf.format(new Date()));
+                cv.put("addedAt", SDF.format(new Date()));
                 cv.put("quizSetId", quizSetId);
                 writeDb.insert(DatabaseHelper.TABLE_QUIZ_QUESTION, null, cv);
             }

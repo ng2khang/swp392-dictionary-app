@@ -44,7 +44,7 @@ public class QuizTakingFragment extends Fragment {
     private int quizTimeInMinutes;
     private int quizSetId;
     private List<String> userAnswers;
-    private static final SimpleDateFormat SDF = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());
+    private static final SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
 
 
     public QuizTakingFragment() {
@@ -276,7 +276,6 @@ public class QuizTakingFragment extends Fragment {
     }
 
     private void showFinishConfirmation() {
-        // Check if all questions are answered
         int unansweredCount = 0;
         for (String answer : userAnswers) {
             if (answer == null || answer.isEmpty()) {

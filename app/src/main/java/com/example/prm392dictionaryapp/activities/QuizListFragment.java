@@ -7,7 +7,6 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentResultListener;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -23,7 +22,7 @@ import com.example.prm392dictionaryapp.adapters.QuizListAdapter;
 import com.example.prm392dictionaryapp.entities.QuizSet;
 import com.example.prm392dictionaryapp.utils.DatabaseHelper;
 
-import java.text.SimpleDateFormat;
+import android.icu.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
@@ -35,7 +34,7 @@ public class QuizListFragment extends Fragment {
     private ArrayList<QuizSet> quizList;
     private DatabaseHelper quizHelper;
     private TextView tvNoQuiz;
-    private static final SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+    private static final SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
 
     public QuizListFragment() {
         // Required empty public constructor
@@ -81,7 +80,7 @@ public class QuizListFragment extends Fragment {
             }
         });
 
-        quizHelper = new DatabaseHelper(getActivity(), "flashcardsflashcards.db", null, 1);
+        quizHelper = new DatabaseHelper(getActivity(), "flashcards.db", null, 1);
         loadQuizList();
 
         tvNoQuiz = view.findViewById(R.id.tv_no_quiz);
