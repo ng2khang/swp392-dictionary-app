@@ -21,7 +21,7 @@ import android.widget.Toast;
 import com.example.prm392dictionaryapp.R;
 import com.example.prm392dictionaryapp.adapters.QuizListAdapter;
 import com.example.prm392dictionaryapp.entities.QuizSet;
-import com.example.prm392dictionaryapp.utils.MyHelper;
+import com.example.prm392dictionaryapp.utils.DatabaseHelper;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -33,7 +33,7 @@ public class QuizListFragment extends Fragment {
     private RecyclerView rvQuizList;
     private QuizListAdapter adapter;
     private ArrayList<QuizSet> quizList;
-    private MyHelper quizHelper;
+    private DatabaseHelper quizHelper;
     private TextView tvNoQuiz;
     private static final SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
 
@@ -81,7 +81,7 @@ public class QuizListFragment extends Fragment {
             }
         });
 
-        quizHelper = new MyHelper(getActivity(), "quiz_database.db", null, 1);
+        quizHelper = new DatabaseHelper(getActivity(), "flashcardsflashcards.db", null, 1);
         loadQuizList();
 
         tvNoQuiz = view.findViewById(R.id.tv_no_quiz);
@@ -109,8 +109,8 @@ public class QuizListFragment extends Fragment {
         try {
             db = quizHelper.getReadableDatabase();
 
-            String[] columns = {"id", "title", "description", "totalQuestion", "quizTime", "createdAt", "flashcardSetId"};
-            cursor = db.query(MyHelper.TABLE_QUIZ_SET, columns, null, null, null, null, "createdAt DESC");
+            String[] columns = {"id", "title", "description", "totalQuestion", "quizTime", "createdAt", "set_id"};
+            cursor = db.query(DatabaseHelper.TABLE_QUIZ_SET, columns, null, null, null, null, "createdAt DESC");
             if (cursor != null) {
                 if (cursor.moveToFirst()) {
                     do {

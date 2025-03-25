@@ -21,7 +21,7 @@ import android.widget.Toast;
 
 import com.example.prm392dictionaryapp.R;
 import com.example.prm392dictionaryapp.entities.QuizQuestion;
-import com.example.prm392dictionaryapp.utils.MyHelper;
+import com.example.prm392dictionaryapp.utils.DatabaseHelper;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -36,7 +36,7 @@ public class QuizTakingFragment extends Fragment {
     private RadioGroup rgAnswers;
     private RadioButton rbAnswer1, rbAnswer2, rbAnswer3, rbAnswer4;
     private Button btnPrevious, btnNext, btnFinish;
-    private MyHelper quizHelper;
+    private DatabaseHelper quizHelper;
     private List<QuizQuestion> questionList;
     private int currentQuestionIndex = 0;
     private int correctAnswers = 0;
@@ -70,7 +70,7 @@ public class QuizTakingFragment extends Fragment {
         btnFinish = view.findViewById(R.id.btn_finish);
 
         // Initialize database helper
-        quizHelper = new MyHelper(getActivity(), "quiz_database.db", null, 1);
+        quizHelper = new DatabaseHelper(getActivity(), "flashcards.db", null, 1);
 
         // Get quiz set ID from arguments
         if (getArguments() != null) {
@@ -96,7 +96,7 @@ public class QuizTakingFragment extends Fragment {
         SQLiteDatabase db = quizHelper.getReadableDatabase();
         Cursor cursor = null;
         try {
-            cursor = db.query(MyHelper.TABLE_QUIZ_SET, new String[]{"quizTime"}, 
+            cursor = db.query(DatabaseHelper.TABLE_QUIZ_SET, new String[]{"quizTime"},
                     "id = ?", new String[]{String.valueOf(quizSetId)}, null, null, null);
             if (cursor != null && cursor.moveToFirst()) {
                 quizTimeInMinutes = cursor.getInt(cursor.getColumnIndexOrThrow("quizTime"));
@@ -136,7 +136,7 @@ public class QuizTakingFragment extends Fragment {
         Cursor cursor = null;
         try {
             String[] columns = {"id", "question", "answer"};
-            cursor = db.query(MyHelper.TABLE_QUIZ_QUESTION, columns, "quizSetId = ?",
+            cursor = db.query(DatabaseHelper.TABLE_QUIZ_QUESTION, columns, "quizSetId = ?",
                     new String[]{String.valueOf(quizSetId)}, null, null, null);
             if (cursor != null && cursor.moveToFirst()) {
                 do {
@@ -206,7 +206,7 @@ public class QuizTakingFragment extends Fragment {
         Cursor cursor = null;
         try {
             String[] columns = {"answer"};
-            cursor = db.query(MyHelper.TABLE_QUIZ_QUESTION, columns, 
+            cursor = db.query(DatabaseHelper.TABLE_QUIZ_QUESTION, columns,
                     "quizSetId = ? AND answer != ?", 
                     new String[]{String.valueOf(quizSetId), correctAnswer}, 
                     null, null, "RANDOM() LIMIT 3");
@@ -309,7 +309,7 @@ public class QuizTakingFragment extends Fragment {
         values.put("score", correctAnswers);
         values.put("isCompleted", 1);
         values.put("completedAt", SDF.format(completedAt));
-        db.insert(MyHelper.TABLE_QUIZ_RESULT, null, values);
+        db.insert(DatabaseHelper.TABLE_QUIZ_RESULT, null, values);
         db.close();
 
         // Show quiz result
