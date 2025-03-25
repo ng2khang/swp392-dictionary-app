@@ -2,7 +2,7 @@ package com.example.prm392dictionaryapp.entities;
 
 public class Flashcard {
     private int id;
-    private int flashcardSetId;
+    private int set_id;
     private String term;
     private String definition;
 
@@ -19,9 +19,9 @@ public class Flashcard {
 
     public void setId(int id) { this.id = id; }
 
-    public int getFlashcardSetId() { return flashcardSetId; }
+    public int getFlashcardSetId() { return set_id; }
 
-    public void setFlashcardSetId(int flashcardSetId) { this.flashcardSetId = flashcardSetId; }
+    public void setFlashcardSetId(int flashcardSetId) { this.set_id = flashcardSetId; }
 
     public String getTerm() {
         return term;

@@ -7,7 +7,6 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.prm392dictionaryapp.R;
 import com.example.prm392dictionaryapp.adapters.ViewPagerAdapter;
-import com.example.prm392dictionaryapp.utils.MyHelper;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 

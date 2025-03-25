@@ -19,20 +19,47 @@ import java.util.Set;
 public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String DB_NAME = "flashcards.db";
     private static final int DB_VERSION = 1;
+    public static final String TABLE_QUIZ_SET = "quiz_set";
+    public static final String TABLE_QUIZ_QUESTION = "quiz_question";
+    public static final String TABLE_QUIZ_RESULT = "quiz_result";
+    public static final String TABLE_FLASHCARD_SET = "sets";
+    public static final String TABLE_FLASHCARD = "flashcards";
     public DatabaseHelper(@Nullable Context context, @Nullable String name, @Nullable SQLiteDatabase.CursorFactory factory, int version) {
-        super(context, name, factory, version);
+        super(context, DB_NAME, factory, DB_VERSION);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+        //quiz_set
+        String CREATE_QUIZ_SET_TABLE = "CREATE TABLE "+TABLE_QUIZ_SET +" ( id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "title TEXT, description TEXT, totalQuestion INT, quizTime INT, set_id INT, createdAt DATETIME DEFAULT CURRENT_TIMESTAMP," +
+                "FOREIGN KEY(set_id) REFERENCES " + TABLE_FLASHCARD_SET + " (id) ON DELETE CASCADE)";
+        db.execSQL(CREATE_QUIZ_SET_TABLE);
+
+        //quiz_question
+        String CREATE_QUIZ_QUESTION_TABLE = "CREATE TABLE "+ TABLE_QUIZ_QUESTION +" (id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "question TEXT, answer TEXT, addedAt DATETIME, quizSetId INT, " +
+                "FOREIGN KEY(quizSetId) REFERENCES " + TABLE_QUIZ_SET + " (id) ON DELETE CASCADE)";
+        db.execSQL(CREATE_QUIZ_QUESTION_TABLE);
+
+        //quiz_result
+        String CREATE_QUIZ_RESULT_TABLE = "CREATE TABLE " + TABLE_QUIZ_RESULT +" (id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "quizSetId INT , score INT, isCompleted INT, completedAt DATETIME DEFAULT CURRENT_TIMESTAMP, " +
+                "FOREIGN KEY (quizSetId) REFERENCES " + TABLE_QUIZ_SET + " (id) ON DELETE CASCADE)";
+        db.execSQL(CREATE_QUIZ_RESULT_TABLE);
+
         db.execSQL("CREATE TABLE sets(id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, created_at DATETIME DEFAULT CURRENT_TIMESTAMP)");
-        db.execSQL("CREATE TABLE flashcards(id INTEGER PRIMARY KEY AUTOINCREMENT, set_id INTEGER, term TEXT, definition TEXT, FOREIGN KEY(set_id) REFERENCES sets(id))");
+        db.execSQL("CREATE TABLE flashcards(id INTEGER PRIMARY KEY AUTOINCREMENT, set_id INTEGER, term TEXT, definition TEXT, " +
+                "FOREIGN KEY(set_id) REFERENCES sets(id) ON DELETE CASCADE)");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS flashcards");
         db.execSQL("DROP TABLE IF EXISTS sets");
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_QUIZ_RESULT);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_QUIZ_QUESTION);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_QUIZ_SET);
         onCreate(db);
     }
 
