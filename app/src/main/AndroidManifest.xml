@@ -76,6 +76,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".activities.ManageGrammarActivity"
+            android:exported="false" />
+        <activity android:name=".activities.EditGrammarActivity"/>
+
     </application>
 
 </manifest>
