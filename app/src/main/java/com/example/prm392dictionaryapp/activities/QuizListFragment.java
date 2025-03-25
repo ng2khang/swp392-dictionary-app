@@ -132,6 +132,8 @@ public class QuizListFragment extends Fragment {
                     } while (cursor.moveToNext());
                 }
                 cursor.close();
+            }else {
+                return;
             }
             adapter.notifyDataSetChanged();
         } catch (Exception e) {
