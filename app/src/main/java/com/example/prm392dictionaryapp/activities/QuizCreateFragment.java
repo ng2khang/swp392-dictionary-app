@@ -2,7 +2,6 @@ package com.example.prm392dictionaryapp.activities;
 
 import android.content.ContentValues;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -23,9 +22,8 @@ import com.example.prm392dictionaryapp.R;
 import com.example.prm392dictionaryapp.entities.Flashcard;
 import com.example.prm392dictionaryapp.entities.FlashcardSet;
 import com.example.prm392dictionaryapp.utils.DatabaseHelper;
-import com.example.prm392dictionaryapp.utils.MyHelper;
 
-import java.text.SimpleDateFormat;
+import android.icu.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -37,12 +35,12 @@ public class QuizCreateFragment extends Fragment {
     private TextView tvSelectedVocab;
     private LinearLayout layoutQuizDetails;
     private EditText etQuizSetName, etQuizSetDescription, etTotalQuestions, etQuizTime;
-    private MyHelper quizHelper;
+    private DatabaseHelper quizHelper;
     private List<FlashcardSet> flashcardSetList;
     private FlashcardSet selectedFlashcardSet;
     private Button btnChooseVocab, btnCreateQuizSet;
     private View view;
-    private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+    private static final SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
     public QuizCreateFragment() {
         // Required empty public constructor
     }
@@ -60,7 +58,7 @@ public class QuizCreateFragment extends Fragment {
         etQuizTime = view.findViewById(R.id.et_quiz_time);
         btnCreateQuizSet = view.findViewById(R.id.btn_create_quiz_set);
 
-        quizHelper = new MyHelper(getActivity(), "quiz_database.db", null, 1);
+        quizHelper = new DatabaseHelper(getActivity(), "flashcards.db", null, 1);
         loadFlashcardSets();
         btnChooseVocab.setOnClickListener(v -> showFlashcardSetDialog());
         btnCreateQuizSet.setOnClickListener(v -> createQuizSet());
@@ -74,7 +72,7 @@ public class QuizCreateFragment extends Fragment {
 
         try {
             String[] columns = {"id", "title"};
-            cursor = db.query(MyHelper.TABLE_FLASHCARD_SET, columns, null, null, null, null, null);
+            cursor = db.query(DatabaseHelper.TABLE_FLASHCARD_SET, columns, null, null, null, null, null);
             if (cursor != null && cursor.moveToFirst()) {
                 do {
                     int id = cursor.getInt(cursor.getColumnIndexOrThrow("id"));
@@ -103,7 +101,7 @@ public class QuizCreateFragment extends Fragment {
         SQLiteDatabase db = quizHelper.getReadableDatabase();
         Cursor cursor = null;
         try {
-            String query = "SELECT COUNT(*) FROM " + MyHelper.TABLE_FLASHCARD + " WHERE flashcardSetId = ?";
+            String query = "SELECT COUNT(*) FROM " + DatabaseHelper.TABLE_FLASHCARD + " WHERE set_id = ?";
             cursor = db.rawQuery(query, new String[]{String.valueOf(flashcardSetId)});
             if (cursor != null && cursor.moveToFirst()) {
                 count = cursor.getInt(0);
@@ -149,7 +147,7 @@ public class QuizCreateFragment extends Fragment {
         String quizTimeStr = etQuizTime.getText().toString().trim();
 
         if (title.isEmpty() || totalQuestionsStr.isEmpty() || quizTimeStr.isEmpty() || selectedFlashcardSet == null) {
-            Toast.makeText(getActivity(), "Please complete all fields", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Please complete all require fields", Toast.LENGTH_SHORT).show();
             return;
         }
         int totalQuestions = Integer.parseInt(totalQuestionsStr);
@@ -167,8 +165,8 @@ public class QuizCreateFragment extends Fragment {
         values.put("description", description);
         values.put("totalQuestion", totalQuestions);
         values.put("quizTime", quizTime);
-        values.put("flashcardSetId", selectedFlashcardSet.getId());
-        long quizSetId = db.insert(MyHelper.TABLE_QUIZ_SET, null, values);
+        values.put("set_id", selectedFlashcardSet.getId());
+        long quizSetId = db.insert(DatabaseHelper.TABLE_QUIZ_SET, null, values);
         db.close();
 
         if (quizSetId != -1) {
@@ -177,7 +175,7 @@ public class QuizCreateFragment extends Fragment {
             QuizSetDetailFragment detailFragment = new QuizSetDetailFragment();
             Bundle bundle = new Bundle();
             bundle.putLong("quizSetId",quizSetId);
-            bundle.putInt("flashcardSetId", selectedFlashcardSet.getId());
+            bundle.putInt("set_id", selectedFlashcardSet.getId());
             detailFragment.setArguments(bundle);
 
             getParentFragmentManager().beginTransaction()
@@ -194,14 +192,14 @@ public class QuizCreateFragment extends Fragment {
         SQLiteDatabase db = quizHelper.getReadableDatabase();
         Cursor cursor = null;
         try {
-            String[] columns = {"id", "flashcardSetId", "term", "definition"};
-            cursor = db.query(MyHelper.TABLE_FLASHCARD, columns, "flashcardSetId = ?",
+            String[] columns = {"id", "set_id", "term", "definition"};
+            cursor = db.query(DatabaseHelper.TABLE_FLASHCARD, columns, "set_id = ?",
                     new String[]{String.valueOf(flashcardSetId)}, null, null, null);
             if (cursor != null && cursor.moveToFirst()) {
                 do {
                     Flashcard fc = new Flashcard();
                     fc.setId(cursor.getInt(cursor.getColumnIndexOrThrow("id")));
-                    fc.setFlashcardSetId(cursor.getInt(cursor.getColumnIndexOrThrow("flashcardSetId")));
+                    fc.setFlashcardSetId(cursor.getInt(cursor.getColumnIndexOrThrow("set_id")));
                     fc.setTerm(cursor.getString(cursor.getColumnIndexOrThrow("term")));
                     fc.setDefinition(cursor.getString(cursor.getColumnIndexOrThrow("definition")));
                     flashcards.add(fc);
@@ -232,9 +230,9 @@ public class QuizCreateFragment extends Fragment {
                 //question = definition và answer = term
                 cv.put("question", fc.getDefinition());
                 cv.put("answer", fc.getTerm());
-                cv.put("addedAt", sdf.format(new Date()));
+                cv.put("addedAt", SDF.format(new Date()));
                 cv.put("quizSetId", quizSetId);
-                writeDb.insert(MyHelper.TABLE_QUIZ_QUESTION, null, cv);
+                writeDb.insert(DatabaseHelper.TABLE_QUIZ_QUESTION, null, cv);
             }
         } catch (Exception e) {
             e.printStackTrace();

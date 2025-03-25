@@ -14,18 +14,18 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.prm392dictionaryapp.R;
-import com.example.prm392dictionaryapp.utils.MyHelper;
+import com.example.prm392dictionaryapp.utils.DatabaseHelper;
 
-import java.text.SimpleDateFormat;
+import android.icu.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
 public class QuizResultFragment extends Fragment {
     private TextView tvScore, tvPercentage, tvCorrectAnswers, tvWrongAnswers, tvTimeTaken, tvCompletedAt;
     private Button btnBack;
-    private MyHelper quizHelper;
+    private DatabaseHelper quizHelper;
     private int quizSetId;
-    private static final SimpleDateFormat SDF = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());
+    private static final SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -45,7 +45,7 @@ public class QuizResultFragment extends Fragment {
         tvCompletedAt = view.findViewById(R.id.tv_completed_at);
         btnBack = view.findViewById(R.id.btn_back_to_list);
 
-        quizHelper = new MyHelper(getActivity(), "quiz_database.db", null, 1);
+        quizHelper = new DatabaseHelper(getActivity(), "flashcards.db", null, 1);
 
         if (getArguments() != null) {
             boolean saveResult = getArguments().getBoolean("saveResult", false);
@@ -91,7 +91,7 @@ public class QuizResultFragment extends Fragment {
         values.put("score", score);
         values.put("isCompleted", 1);
         values.put("completedAt", SDF.format(completedAt));
-        db.insert(MyHelper.TABLE_QUIZ_RESULT, null, values);
+        db.insert(DatabaseHelper.TABLE_QUIZ_RESULT, null, values);
         db.close();
 
         // Notify QuizHistoryFragment to refresh

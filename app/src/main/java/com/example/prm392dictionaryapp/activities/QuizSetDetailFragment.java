@@ -16,21 +16,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.prm392dictionaryapp.R;
 import com.example.prm392dictionaryapp.adapters.QuizQuestionAdapter;
-import com.example.prm392dictionaryapp.entities.Flashcard;
 import com.example.prm392dictionaryapp.entities.QuizQuestion;
 import com.example.prm392dictionaryapp.utils.DatabaseHelper;
-import com.example.prm392dictionaryapp.utils.MyHelper;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 public class QuizSetDetailFragment extends Fragment {
     private Toolbar toolbar;
     private Button btnDoQuiz, btnDeleteQuizSet, btnEditQuizInfo;
@@ -40,7 +33,7 @@ public class QuizSetDetailFragment extends Fragment {
     private ArrayList<QuizQuestion> questionList;
     private boolean isEditing = false;
     private int quizSetId, flashcardSetId;
-    private MyHelper quizHelper;
+    private DatabaseHelper quizHelper;
     View view;
 
     public QuizSetDetailFragment() {
@@ -64,11 +57,11 @@ public class QuizSetDetailFragment extends Fragment {
         rvQuestions = view.findViewById(R.id.rv_questions);
         btnEditQuizInfo = view.findViewById(R.id.btn_edit_quiz_info);
         rvQuestions.setLayoutManager(new LinearLayoutManager(getActivity()));
-        quizHelper = new MyHelper(getActivity(), "quiz_database.db", null, 1);
+        quizHelper = new DatabaseHelper(getActivity(), "flashcards.db", null, 1);
 
         if (getArguments() != null) {
             quizSetId = (int) getArguments().getLong("quizSetId", -1);
-            flashcardSetId = getArguments().getInt("flashcardSetId", -1);
+            flashcardSetId = getArguments().getInt("set_id", -1);
             loadQuizSetDetail();
             loadQuizQuestions();
         }
@@ -95,7 +88,7 @@ public class QuizSetDetailFragment extends Fragment {
         Cursor cursor = null;
         try {
             String[] columns = {"title", "description", "totalQuestion", "quizTime"};
-            cursor = db.query(MyHelper.TABLE_QUIZ_SET, columns, "id = ?",
+            cursor = db.query(DatabaseHelper.TABLE_QUIZ_SET, columns, "id = ?",
                     new String[]{String.valueOf(quizSetId)}, null, null, null);
             if (cursor != null && cursor.moveToFirst()){
                 String title = cursor.getString(cursor.getColumnIndexOrThrow("title"));
@@ -106,7 +99,7 @@ public class QuizSetDetailFragment extends Fragment {
                 etQuizSetName.setText(title);
                 etQuizSetDescription.setText(description);
                 etQuizSetTotalQuestion.setText("Total question: " + totalQuestion);
-                etQuizSetTime.setText("Time: " + quizTime + " phút");
+                etQuizSetTime.setText("Time: " + quizTime + " minutes");
             }
         } catch(Exception e) {
             e.printStackTrace();
@@ -126,7 +119,7 @@ public class QuizSetDetailFragment extends Fragment {
         Cursor cursor = null;
         try {
             String[] columns = {"id", "question", "answer", "addedAt", "quizSetId"};
-            cursor = db.query(MyHelper.TABLE_QUIZ_QUESTION, columns, "quizSetId = ?",
+            cursor = db.query(DatabaseHelper.TABLE_QUIZ_QUESTION, columns, "quizSetId = ?",
                     new String[]{String.valueOf(quizSetId)}, null, null, "addedAt DESC");
             if (cursor != null && cursor.moveToFirst()){
                 do {
@@ -194,7 +187,7 @@ public class QuizSetDetailFragment extends Fragment {
         ContentValues cv = new ContentValues();
         cv.put("question", newQuestion);
         cv.put("answer", newAnswer);
-        int updated = db.update(MyHelper.TABLE_QUIZ_QUESTION, cv, "id = ?", new String[]{String.valueOf(questionId)});
+        int updated = db.update(DatabaseHelper.TABLE_QUIZ_QUESTION, cv, "id = ?", new String[]{String.valueOf(questionId)});
         db.close();
         if (updated > 0) {
             QuizQuestion q = questionList.get(position);
@@ -208,7 +201,7 @@ public class QuizSetDetailFragment extends Fragment {
     }
     private void deleteQuizQuestion(int questionId, int position) {
         SQLiteDatabase db = quizHelper.getWritableDatabase();
-        int deleted = db.delete(MyHelper.TABLE_QUIZ_QUESTION, "id = ?", new String[]{String.valueOf(questionId)});
+        int deleted = db.delete(DatabaseHelper.TABLE_QUIZ_QUESTION, "id = ?", new String[]{String.valueOf(questionId)});
         db.close();
         if (deleted > 0) {
             questionList.remove(position);
@@ -221,7 +214,7 @@ public class QuizSetDetailFragment extends Fragment {
     }
     private void deleteQuizSet() {
         SQLiteDatabase db = quizHelper.getWritableDatabase();
-        int deleted = db.delete(MyHelper.TABLE_QUIZ_SET, "id = ?", new String[]{String.valueOf(quizSetId)});
+        int deleted = db.delete(DatabaseHelper.TABLE_QUIZ_SET, "id = ?", new String[]{String.valueOf(quizSetId)});
         db.close();
         if (deleted > 0) {
             Toast.makeText(getActivity(), "Quiz Set Removed", Toast.LENGTH_SHORT).show();
@@ -269,7 +262,7 @@ public class QuizSetDetailFragment extends Fragment {
 
         SQLiteDatabase db = quizHelper.getWritableDatabase();
         try {
-            int rows = db.update(MyHelper.TABLE_QUIZ_SET, cv, "id = ?", new String[]{String.valueOf(quizSetId)});
+            int rows = db.update(DatabaseHelper.TABLE_QUIZ_SET, cv, "id = ?", new String[]{String.valueOf(quizSetId)});
             if (rows > 0) {
                 Toast.makeText(getActivity(), "Quiz set updated", Toast.LENGTH_SHORT).show();
             } else {
@@ -288,7 +281,7 @@ public class QuizSetDetailFragment extends Fragment {
         SQLiteDatabase db = quizHelper.getReadableDatabase();
         Cursor cursor = null;
         try {
-            String query = "SELECT COUNT(*) FROM " + MyHelper.TABLE_QUIZ_QUESTION + " WHERE quizSetId = ?";
+            String query = "SELECT COUNT(*) FROM " + DatabaseHelper.TABLE_QUIZ_QUESTION + " WHERE quizSetId = ?";
             cursor = db.rawQuery(query, new String[]{String.valueOf(quizSetId)});
             if (cursor != null && cursor.moveToFirst()) {
                 count = cursor.getInt(0);
@@ -308,7 +301,7 @@ public class QuizSetDetailFragment extends Fragment {
         SQLiteDatabase db = quizHelper.getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put("totalQuestion", newTotal);
-        db.update(MyHelper.TABLE_QUIZ_SET, cv, "id = ?", new String[]{String.valueOf(quizSetId)});
+        db.update(DatabaseHelper.TABLE_QUIZ_SET, cv, "id = ?", new String[]{String.valueOf(quizSetId)});
         db.close();
     }
 

@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.prm392dictionaryapp.R;
 import com.example.prm392dictionaryapp.entities.QuizSet;
 
-import java.text.SimpleDateFormat;
+import android.icu.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
 
@@ -20,7 +20,7 @@ public class QuizListAdapter extends RecyclerView.Adapter<QuizListAdapter.QuizVi
     public QuizListAdapter(List<QuizSet> quizList) {
         this.quizList = quizList;
     }
-    private static final SimpleDateFormat SDF = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());
+    private static final SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
     public interface OnItemClickListener {
         void onItemClick(QuizSet quiz);
     }
@@ -43,7 +43,7 @@ public class QuizListAdapter extends RecyclerView.Adapter<QuizListAdapter.QuizVi
         QuizSet quiz = quizList.get(position);
         holder.tvTitle.setText(quiz.getTitle());
         holder.tvDescription.setText(quiz.getDescription());
-        holder.tvTotalQuestionAndTime.setText(quiz.getTotalQuestion() + "câu/" + quiz.getQuizTime() + "phút");
+        holder.tvTotalQuestionAndTime.setText(quiz.getTotalQuestion() + "questions/" + quiz.getQuizTime() + "minutes");
 
         String dateString = SDF.format(quiz.getCreatedAt());
         holder.tvCreatedAt.setText(dateString);

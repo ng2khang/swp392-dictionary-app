@@ -22,10 +22,9 @@ import com.example.prm392dictionaryapp.R;
 import com.example.prm392dictionaryapp.adapters.QuizHistoryAdapter;
 import com.example.prm392dictionaryapp.entities.QuizResult;
 import com.example.prm392dictionaryapp.entities.QuizSet;
-import com.example.prm392dictionaryapp.utils.MyHelper;
+import com.example.prm392dictionaryapp.utils.DatabaseHelper;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Locale;
 
 public class QuizHistoryFragment extends Fragment {
@@ -33,9 +32,9 @@ public class QuizHistoryFragment extends Fragment {
     private RecyclerView rvQuizHistory;
     private QuizHistoryAdapter adapter;
     private ArrayList<QuizResult> quizHistoryList;
-    private MyHelper quizHelper;
+    private DatabaseHelper quizHelper;
     private TextView tvNoHistory;
-    private static final SimpleDateFormat SDF = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());
+    private static final SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
 
     public QuizHistoryFragment() {
         // Required empty public constructor
@@ -85,7 +84,7 @@ public class QuizHistoryFragment extends Fragment {
             }
         });
 
-        quizHelper = new MyHelper(getActivity(), "quiz_database.db", null, 1);
+        quizHelper = new DatabaseHelper(getActivity(), "flashcards.db", null, 1);
         loadQuizHistory();
 
         tvNoHistory = view.findViewById(R.id.tv_no_history);
@@ -114,8 +113,8 @@ public class QuizHistoryFragment extends Fragment {
         try {
             db = quizHelper.getReadableDatabase();
             String query = "SELECT qr.*, qs.title, qs.totalQuestion " +
-                    "FROM " + MyHelper.TABLE_QUIZ_RESULT + " qr " +
-                    "JOIN " + MyHelper.TABLE_QUIZ_SET + " qs ON qr.quizSetId = qs.id " +
+                    "FROM " + DatabaseHelper.TABLE_QUIZ_RESULT + " qr " +
+                    "JOIN " + DatabaseHelper.TABLE_QUIZ_SET + " qs ON qr.quizSetId = qs.id " +
                     "WHERE qr.isCompleted = 1 " +
                     "ORDER BY qr.completedAt DESC";
             cursor = db.rawQuery(query, null);
@@ -163,7 +162,7 @@ public class QuizHistoryFragment extends Fragment {
         SQLiteDatabase db = quizHelper.getReadableDatabase();
         Cursor cursor = null;
         try {
-            cursor = db.query(MyHelper.TABLE_QUIZ_SET, new String[]{"totalQuestion"},
+            cursor = db.query(DatabaseHelper.TABLE_QUIZ_SET, new String[]{"totalQuestion"},
                     "id = ?", new String[]{String.valueOf(quizSetId)}, null, null, null);
             if (cursor != null && cursor.moveToFirst()) {
                 return cursor.getInt(cursor.getColumnIndexOrThrow("totalQuestion"));
