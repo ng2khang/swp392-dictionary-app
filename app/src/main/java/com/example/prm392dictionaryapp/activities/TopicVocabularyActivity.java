@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.text.InputType;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -34,6 +35,7 @@ public class TopicVocabularyActivity extends AppCompatActivity {
     VocabularyDAO vocabSqlite;
 
     Button btnAddTopic, btnAll;
+    ImageView btnMenu;
 
     VocabularyCategoryAdapter adapter;
 
@@ -49,6 +51,7 @@ public class TopicVocabularyActivity extends AppCompatActivity {
 
         btnAddTopic = findViewById(R.id.btnAddTopic);
         btnAll = findViewById(R.id.btnAll);
+        btnMenu = findViewById(R.id.Menu);
 
         vocabList = vocabSqlite.getAllVocabularies();
 
@@ -97,6 +100,11 @@ public class TopicVocabularyActivity extends AppCompatActivity {
 
         btnAll.setOnClickListener(view -> {
             Intent intent = new Intent(this, MainVocabularyActivity.class);
+            startActivity(intent);
+        });
+
+        btnMenu.setOnClickListener(view -> {
+            Intent intent = new Intent(TopicVocabularyActivity.this, HomepageActivity.class);
             startActivity(intent);
         });
     }
