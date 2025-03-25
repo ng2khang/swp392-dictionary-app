@@ -86,7 +86,7 @@ public class TopicVocabularyActivity extends AppCompatActivity {
                 String topicName = input.getText().toString().trim();
                 if (!topicName.isEmpty()) {
                     String result = vocabSqlite.addNewCategory(topicName);
-                    adapter.notifyDataSetChanged();
+                    reloadVocabularyList();
                     Toast.makeText(this, result, Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(this, "Tên chủ đề không được để trống!", Toast.LENGTH_SHORT).show();
@@ -107,5 +107,24 @@ public class TopicVocabularyActivity extends AppCompatActivity {
             Intent intent = new Intent(TopicVocabularyActivity.this, HomepageActivity.class);
             startActivity(intent);
         });
+    }
+
+    private void reloadVocabularyList() {
+        vocabList.clear();
+        vocabList.addAll(vocabSqlite.getAllVocabularies());
+
+        ArrayList<ListItem> listItems = new ArrayList<>();
+        String currentCategory = "";
+        for (Vocabulary vocab : vocabList) {
+            if (vocab.getCategoryName() != null && !vocab.getCategoryName().equals(currentCategory)) {
+                currentCategory = vocab.getCategoryName();
+                listItems.add(new CategoryHeader(currentCategory));
+            }
+            if (vocab.getWord() != null) {
+                listItems.add(new VocabularyItem(vocab));
+            }
+        }
+        // Cập nhật adapter
+        adapter.updateData(listItems);
     }
 }

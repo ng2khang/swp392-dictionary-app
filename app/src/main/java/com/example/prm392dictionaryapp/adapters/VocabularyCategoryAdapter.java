@@ -96,6 +96,7 @@ public class VocabularyCategoryAdapter extends RecyclerView.Adapter<RecyclerView
         }
     }
 
+
     @Override
     public int getItemCount() {
         return items.size();
@@ -145,5 +146,11 @@ public class VocabularyCategoryAdapter extends RecyclerView.Adapter<RecyclerView
             tvCategory.setText(vocab.getCategoryName());
             tvMeaning.setText(vocab.getMeaning());
         }
+    }
+
+    public void updateData(List<ListItem> newItems) {
+        this.items.clear();
+        this.items.addAll(newItems);
+        notifyDataSetChanged();
     }
 }
