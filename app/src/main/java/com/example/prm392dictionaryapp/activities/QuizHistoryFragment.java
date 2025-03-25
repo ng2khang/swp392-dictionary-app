@@ -25,7 +25,6 @@ import com.example.prm392dictionaryapp.entities.QuizSet;
 import com.example.prm392dictionaryapp.utils.DatabaseHelper;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Locale;
 
 public class QuizHistoryFragment extends Fragment {
@@ -35,7 +34,7 @@ public class QuizHistoryFragment extends Fragment {
     private ArrayList<QuizResult> quizHistoryList;
     private DatabaseHelper quizHelper;
     private TextView tvNoHistory;
-    private static final SimpleDateFormat SDF = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());
+    private static final SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
 
     public QuizHistoryFragment() {
         // Required empty public constructor

@@ -16,7 +16,7 @@ import androidx.fragment.app.Fragment;
 import com.example.prm392dictionaryapp.R;
 import com.example.prm392dictionaryapp.utils.DatabaseHelper;
 
-import java.text.SimpleDateFormat;
+import android.icu.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
@@ -25,7 +25,7 @@ public class QuizResultFragment extends Fragment {
     private Button btnBack;
     private DatabaseHelper quizHelper;
     private int quizSetId;
-    private static final SimpleDateFormat SDF = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());
+    private static final SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

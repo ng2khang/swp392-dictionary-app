@@ -16,20 +16,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.prm392dictionaryapp.R;
 import com.example.prm392dictionaryapp.adapters.QuizQuestionAdapter;
-import com.example.prm392dictionaryapp.entities.Flashcard;
 import com.example.prm392dictionaryapp.entities.QuizQuestion;
 import com.example.prm392dictionaryapp.utils.DatabaseHelper;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 public class QuizSetDetailFragment extends Fragment {
     private Toolbar toolbar;
     private Button btnDoQuiz, btnDeleteQuizSet, btnEditQuizInfo;
@@ -105,7 +99,7 @@ public class QuizSetDetailFragment extends Fragment {
                 etQuizSetName.setText(title);
                 etQuizSetDescription.setText(description);
                 etQuizSetTotalQuestion.setText("Total question: " + totalQuestion);
-                etQuizSetTime.setText("Time: " + quizTime + " phút");
+                etQuizSetTime.setText("Time: " + quizTime + " minutes");
             }
         } catch(Exception e) {
             e.printStackTrace();
