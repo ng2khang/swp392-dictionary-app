@@ -46,5 +46,14 @@ public class HomepageActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        Button btnGrammar = findViewById(R.id.btnGrammar);
+        btnGrammar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Chuyển hướng sang GrammarManageActivity
+                Intent intent = new Intent(HomepageActivity.this, ManageGrammarActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 }
