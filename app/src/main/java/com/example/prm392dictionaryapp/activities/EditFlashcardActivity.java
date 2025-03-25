@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -27,6 +28,8 @@ public class EditFlashcardActivity extends AppCompatActivity {
     EditText editSetTitle;
     LinearLayout flashcardContainer;
     Button btnAddFlashcard, btnSave;
+
+    ImageButton btnBack;
     DatabaseHelper dbHelper;
     int setId;
     List<Flashcard> flashcards;
@@ -44,6 +47,7 @@ public class EditFlashcardActivity extends AppCompatActivity {
         flashcardContainer = findViewById(R.id.flashcardContainer);
         btnAddFlashcard = findViewById(R.id.btnAddFlashcard);
         btnSave = findViewById(R.id.btnSave);
+        btnBack = findViewById(R.id.btnBackToList);
         dbHelper = new DatabaseHelper(getApplicationContext(), "flashcards.db", null, 1);
         setId = getIntent().getIntExtra("SET_ID", -1);
         if (setId == -1) {
@@ -61,6 +65,13 @@ public class EditFlashcardActivity extends AppCompatActivity {
 
         btnAddFlashcard.setOnClickListener(v -> addFlashcardView("", ""));
         btnSave.setOnClickListener(v -> saveChanges());
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(EditFlashcardActivity.this, ListSetActivity.class);
+                startActivity(intent);
+            }
+        });
     }
     private void addFlashcardView(String term, String def) {
         View view = LayoutInflater.from(this).inflate(R.layout.item_flashcard, null);

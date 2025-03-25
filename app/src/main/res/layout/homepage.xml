@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/container"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:layout_editor_absoluteX="1dp"
+    tools:layout_editor_absoluteY="1dp"
+    tools:context=".activities.HomepageActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/dark_blue">
+
+        <TextView
+            android:id="@+id/welcomeText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Welcome to Dictionary App"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="30dp"
+            android:textAlignment="center"
+            android:textSize="25dp"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:layout_weight="3"/>
+
+        <TextView
+            android:id="@+id/welcomeText2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:text="An app where you can add and learn new words everyday"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:layout_marginBottom="20dp"/>
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="20dp">
+
+        <Button
+            android:id="@+id/btnReport"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="40dp"
+            android:width="140dp"
+            android:height="140dp"
+            android:background="@drawable/homepage_menu_btn_background"
+            android:text="Report"
+            android:textStyle="bold"
+            android:textSize="18dp">
+
+        </Button>
+
+        <Button
+            android:id="@+id/btnWord"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="50dp"
+            android:width="140dp"
+            android:height="140dp"
+            android:background="@drawable/homepage_menu_btn_background"
+            android:text="Word"
+            android:textStyle="bold"
+            android:textSize="18dp">
+
+        </Button>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="20dp">
+
+        <Button
+            android:id="@+id/btnGrammar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="40dp"
+            android:width="140dp"
+            android:height="140dp"
+            android:background="@drawable/homepage_menu_btn_background"
+            android:text="Grammar"
+            android:textStyle="bold"
+            android:textSize="18dp">
+
+        </Button>
+
+        <Button
+            android:id="@+id/btnFlashcard"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="50dp"
+            android:width="140dp"
+            android:height="140dp"
+            android:background="@drawable/homepage_menu_btn_background"
+            android:text="Flashcard"
+            android:textStyle="bold"
+            android:textSize="18dp">
+
+        </Button>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="20dp">
+
+        <Button
+            android:id="@+id/btnQuiz"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="40dp"
+            android:width="140dp"
+            android:height="140dp"
+            android:background="@drawable/homepage_menu_btn_background"
+            android:text="Quiz"
+            android:textStyle="bold"
+            android:textSize="18dp">
+
+        </Button>
+
+
+        <Button
+            android:id="@+id/btnSetting"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="50dp"
+            android:width="140dp"
+            android:height="140dp"
+            android:background="@drawable/homepage_menu_btn_background"
+            android:text="Theme"
+            android:textStyle="bold"
+            android:textSize="18dp">
+
+        </Button>
+    </LinearLayout>
+</LinearLayout>
