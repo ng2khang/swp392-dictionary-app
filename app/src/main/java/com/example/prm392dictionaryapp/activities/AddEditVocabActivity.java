@@ -67,7 +67,7 @@ public class AddEditVocabActivity extends AppCompatActivity {
 
         AuCategory.setOnItemClickListener((parent, view, position, id) -> {
             String selectedCategory = (String) parent.getItemAtPosition(position);
-            selectedCategoryId = categoryMap.get(selectedCategory); // Lưu vào biến toàn cục
+            selectedCategoryId = categoryMap.get(selectedCategory);
         });
 
         int wordId = getIntent().getIntExtra("wordId", -1);
@@ -79,8 +79,10 @@ public class AddEditVocabActivity extends AppCompatActivity {
                 inputPro.setText(vocab.getPronunciation());
                 inputMean.setText(vocab.getMeaning());
                 inputExample.setText(vocab.getExample());
+                AuCategory.setText(vocab.getCategoryName());
+                selectedCategoryId = vocab.getCategoryId();
             }
-
+        }
 
             btnback.setOnClickListener(view -> {
                 finish();
@@ -105,6 +107,5 @@ public class AddEditVocabActivity extends AppCompatActivity {
                 startActivity(intent);
                 finish();
             });
-        }
     }
 }

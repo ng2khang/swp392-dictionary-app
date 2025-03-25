@@ -6,6 +6,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -28,7 +29,7 @@ public class FavoVocabularyActivity extends AppCompatActivity {
     VocabularyDAO vocabSqlite;
 
     VocabularyAdapter adepter;
-
+    ImageView btnMenu;
     Button btnAll, btnTopic;
 
     @Override
@@ -44,6 +45,7 @@ public class FavoVocabularyActivity extends AppCompatActivity {
 
         btnAll = findViewById(R.id.btnAddTopic);
         btnTopic = findViewById(R.id.btnAll);
+        btnMenu = findViewById(R.id.Menu);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -56,6 +58,11 @@ public class FavoVocabularyActivity extends AppCompatActivity {
 
         btnTopic.setOnClickListener(view -> {
             Intent intent = new Intent(FavoVocabularyActivity.this, TopicVocabularyActivity.class);
+            startActivity(intent);
+        });
+
+        btnMenu.setOnClickListener(view -> {
+            Intent intent = new Intent(FavoVocabularyActivity.this, HomepageActivity.class);
             startActivity(intent);
         });
 

@@ -2,6 +2,7 @@ package com.example.prm392dictionaryapp.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.Button;
@@ -17,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.prm392dictionaryapp.R;
 import com.example.prm392dictionaryapp.adapters.VocabularyAdapter;
 import com.example.prm392dictionaryapp.entities.Vocabulary;
+import com.example.prm392dictionaryapp.utils.DatabaseHelper;
 import com.example.prm392dictionaryapp.utils.VocabularyDAO;
 
 import java.util.ArrayList;
@@ -99,7 +101,7 @@ public class MainVocabularyActivity extends AppCompatActivity {
     public void loadData(String key){
         vocabList.clear();
         if (key.isEmpty() || key == "") {
-//            vocabList.addAll(vocabSqlite.getAllVocabulary());
+            vocabList.addAll(vocabSqlite.getAllVocabulary());
         } else {
             vocabList.addAll(vocabSqlite.searchByWord(key));
         }

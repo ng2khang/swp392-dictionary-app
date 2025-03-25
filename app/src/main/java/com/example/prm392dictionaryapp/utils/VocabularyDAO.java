@@ -47,7 +47,9 @@ public class VocabularyDAO {
 
     public List<Vocabulary> getAllVocabulary() {
         List<Vocabulary> list = new ArrayList<>();
-        Cursor cursor = db.rawQuery("SELECT * FROM vocabulary", null);
+        Cursor cursor = db.rawQuery("SELECT v.id, v.word, v.meaning, v.category_id, c.name AS category_name " +
+                                        "FROM vocabulary v " +
+                                        "LEFT JOIN categories c ON v.category_id = c.id ", null);
 
         if (cursor.moveToFirst()) {
             do {
