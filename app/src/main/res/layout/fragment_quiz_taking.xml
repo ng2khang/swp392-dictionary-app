@@ -158,14 +158,14 @@
 
             </LinearLayout>
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_finish"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Finish Quiz"
-                android:textSize="16sp"
-                android:padding="12dp"
-                app:cornerRadius="8dp"/>
+<!--            <com.google.android.material.button.MaterialButton-->
+<!--                android:id="@+id/btn_finish"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="Finish Quiz"-->
+<!--                android:textSize="16sp"-->
+<!--                android:padding="12dp"-->
+<!--                app:cornerRadius="8dp"/>-->
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

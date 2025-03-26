@@ -1,6 +1,7 @@
 package com.example.prm392dictionaryapp.activities;
 
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.icu.text.SimpleDateFormat;
@@ -22,6 +23,7 @@ import android.widget.Toast;
 import com.example.prm392dictionaryapp.R;
 import com.example.prm392dictionaryapp.entities.QuizQuestion;
 import com.example.prm392dictionaryapp.utils.DatabaseHelper;
+import com.google.android.material.appbar.MaterialToolbar;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -44,6 +46,7 @@ public class QuizTakingFragment extends Fragment {
     private int quizTimeInMinutes;
     private int quizSetId;
     private List<String> userAnswers;
+    private MaterialToolbar toolbar_quiz_taking;
     private static final SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
 
 
@@ -67,7 +70,7 @@ public class QuizTakingFragment extends Fragment {
         rbAnswer4 = view.findViewById(R.id.rb_answer_4);
         btnPrevious = view.findViewById(R.id.btn_previous);
         btnNext = view.findViewById(R.id.btn_next);
-        btnFinish = view.findViewById(R.id.btn_finish);
+        toolbar_quiz_taking = view.findViewById(R.id.toolbar_quiz_taking);
 
         // Initialize database helper
         quizHelper = new DatabaseHelper(getActivity(), "flashcards.db", null, 1);
@@ -87,8 +90,7 @@ public class QuizTakingFragment extends Fragment {
                 showCurrentQuestion();
             }
         });
-        btnFinish.setOnClickListener(v -> showFinishConfirmation());
-
+        toolbar_quiz_taking.setNavigationOnClickListener(v -> getParentFragmentManager().popBackStack());
         return view;
     }
 
@@ -191,7 +193,7 @@ public class QuizTakingFragment extends Fragment {
 
             // Update button states
             btnPrevious.setEnabled(currentQuestionIndex > 0);
-            btnNext.setEnabled(currentQuestionIndex < questionList.size() - 1 );
+            btnNext.setText(currentQuestionIndex < questionList.size() - 1 ? "Next" : "Finish");
         } else {
             showQuizResult();
         }
@@ -321,10 +323,8 @@ public class QuizTakingFragment extends Fragment {
         bundle.putInt("quizSetId", quizSetId);
         resultFragment.setArguments(bundle);
 
-        getParentFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, resultFragment)
-                .addToBackStack(null)
-                .commit();
+        Intent intent = new Intent(getContext(), QuizActivity.class);
+        startActivity(intent);
     }
 
     @Override
