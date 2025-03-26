@@ -135,6 +135,7 @@ public class QuizCreateFragment extends Fragment {
                 tvSelectedVocab.setText("Selected: " + selectedFlashcardSet.getTitle());
                 tvSelectedVocab.setVisibility(View.VISIBLE);
                 layoutQuizDetails.setVisibility(View.VISIBLE);
+                etQuizSetName.setText(selectedFlashcardSet.getTitle());
                 etTotalQuestions.setHint("Total question (Max: " + selectedFlashcardSet.getFlashcardCount() + ")");
             }
         });

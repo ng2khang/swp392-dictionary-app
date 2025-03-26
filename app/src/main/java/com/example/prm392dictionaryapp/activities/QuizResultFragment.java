@@ -1,6 +1,7 @@
 package com.example.prm392dictionaryapp.activities;
 
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -76,11 +77,8 @@ public class QuizResultFragment extends Fragment {
 
         btnBack.setText("Back to History");
         btnBack.setOnClickListener(v -> {
-            // Navigate to QuizHistoryFragment
-            QuizHistoryFragment historyFragment = new QuizHistoryFragment();
-            getParentFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, historyFragment)
-                    .commit();
+            Intent intent = new Intent(getContext(), QuizActivity.class);
+            startActivity(intent);
         });
     }
 
